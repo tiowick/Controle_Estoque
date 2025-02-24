@@ -20,19 +20,25 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
 
         }
 
-        public Task<IEnumerable<Empresa>> ObterEmpresaPorId(Guid empresaId)
+        public async Task<Empresa> ObterFilialEmpresa(Guid id)
         {
-            throw new NotImplementedException();
+            return await Db.Empresas.AsNoTracking()
+                 .Include(f => f.Filial)
+                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public Task<IEnumerable<Empresa>> ObterFilialPorEmpresa()
+        public async Task<IEnumerable<Empresa>> ObterFiliaisEmpresas()
         {
-            throw new NotImplementedException();
+            return await Db.Empresas.AsNoTracking()
+                .Include(f => f.Filial)
+                .OrderBy(e => e.Nome)
+                .ToListAsync();
         }
 
-        public Task<IEnumerable<Empresa>> ObterFilialPorId(Guid filialId)
+        public async Task<IEnumerable<Empresa>> ObterFilialPorEmpresa(Guid filialId)
         {
-            throw new NotImplementedException();
+            return await Buscar(e => e.FilialId == filialId);
         }
+
     }
 }

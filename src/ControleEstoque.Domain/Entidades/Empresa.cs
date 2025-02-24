@@ -10,6 +10,8 @@ namespace Controle_Estoque.Domain.Entidades
     {
         //public long Id { get; set; } = default!; herda o Id de Entity
 
+        public Guid FilialId { get; set; }
+
         public string? Nome { get; set; }
 
         public string? Descricao { get; set; }
@@ -17,7 +19,7 @@ namespace Controle_Estoque.Domain.Entidades
         public string? CNPJ { get; set; }
 
         // Relação: Uma empresa pode ter muitas filiais
-        public ICollection<Filial> Filiais { get; set; } = default!;
+        public Filial Filial { get; set; } 
 
 
     }
