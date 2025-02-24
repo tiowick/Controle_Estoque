@@ -16,7 +16,29 @@ namespace Controle_Estoque.Infra.Mappings
         {
             builder.HasKey(e => e.Id);
 
+            // Define o nome da tabela no banco de dados (opcional)
+            builder.ToTable("Empresas");
 
+            // Configuração das propriedades
+            builder.Property(e => e.Nome)
+                .IsRequired()
+                .HasMaxLength(150);
+
+            builder.Property(e => e.Descricao)
+                .HasMaxLength(500);
+
+            builder.Property(e => e.CNPJ)
+                .IsRequired()
+                .HasMaxLength(18);
+
+            // Relacionamento 1:N -> Uma empresa pode ter várias filiais
+            builder.HasMany(e => e.Filiais)
+                 .WithOne(f => f.Empresa)
+                 .HasForeignKey(f => f.EmpresaId)
+                 .OnDelete(DeleteBehavior.Cascade); // Se deletar a empresa, filiais são deletadas
+
+            // Índice para melhorar a busca por CNPJ
+            builder.HasIndex(e => e.CNPJ).IsUnique();
         }
     }
 }

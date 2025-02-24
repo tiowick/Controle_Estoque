@@ -18,8 +18,7 @@ namespace Controle_Estoque.Domain.Entidades
 
         public string? CNPJ { get; set; }
 
-        // Relação: Uma empresa pode ter muitas filiais
-        public Filial Filial { get; set; } 
+        public ICollection<Filial> Filiais { get; set; } = new List<Filial>();
 
 
     }

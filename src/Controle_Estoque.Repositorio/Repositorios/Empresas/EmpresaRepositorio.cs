@@ -23,14 +23,14 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
         public async Task<Empresa> ObterFilialEmpresa(Guid id)
         {
             return await Db.Empresas.AsNoTracking()
-                 .Include(f => f.Filial)
+                 .Include(f => f.Filiais)
                  .FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<IEnumerable<Empresa>> ObterFiliaisEmpresas()
         {
             return await Db.Empresas.AsNoTracking()
-                .Include(f => f.Filial)
+                .Include(f => f.Filiais)
                 .OrderBy(e => e.Nome)
                 .ToListAsync();
         }
