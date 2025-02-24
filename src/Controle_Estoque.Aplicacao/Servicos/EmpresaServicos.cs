@@ -1,0 +1,60 @@
+﻿using Controle_Estoque.Aplicacao.Interfaces;
+using Controle_Estoque.Domain.Entidades;
+using Controle_Estoque.Domain.Entidades.Validacoes;
+using Controle_Estoque.Domain.Interfaces.Empresas;
+using Controle_Estoque.Domain.Interfaces.Notificador;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Controle_Estoque.Aplicacao.Servicos
+{
+    public class EmpresaServicos : BaseServices, IEmpresaServicos
+    {
+        private readonly IEmpresaRepositorio _empresaRepositorio;
+
+        
+        public EmpresaServicos(IEmpresaRepositorio empresaRepositorio, 
+            INotificador notificador) : base (notificador)
+        {
+            _empresaRepositorio = empresaRepositorio;
+        }
+
+        public async Task Adicionar(Empresa empresa)
+        {
+
+            if (!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
+
+            var produtoExistente = _empresaRepositorio.ObterPorId(empresa.Id);
+            if (produtoExistente != null)
+            {
+                Notificar("Ja existe uma empresa com ID informado!");
+                return;
+            }
+
+            await _empresaRepositorio.Atualizar(empresa);
+        }
+
+        public async Task Atualizar(Empresa empresa)
+        {
+
+            if(!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
+
+            await _empresaRepositorio.Atualizar(empresa);
+        }
+
+        public async Task Remover(Guid id)
+        {
+            await _empresaRepositorio.Remover(id);
+        }
+
+        public void Dispose()
+        {
+            _empresaRepositorio?.Dispose();
+        }
+
+       
+    }
+}
