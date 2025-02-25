@@ -18,6 +18,8 @@ namespace Controle_Estoque.Domain.Entidades.Validacoes
             RuleFor(e => e.Descricao)
                 .MaximumLength(255).WithMessage("A {PropertyName} deve ter no máximo 255 caracteres.");
 
+            // possivel datacadastro
+
             RuleFor(e => e.CNPJ)
                 .NotEmpty().WithMessage("O {PropertyName} é obrigatório.")
                 .Length(14).WithMessage("O {PropertyName} deve conter exatamente 14 dígitos.")
