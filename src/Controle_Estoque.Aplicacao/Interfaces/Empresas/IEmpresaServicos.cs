@@ -5,18 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Controle_Estoque.Aplicacao.Interfaces
+namespace Controle_Estoque.Aplicacao.Interfaces.Empresas
 {
     public interface IEmpresaServicos : IDisposable
     {
-        // Task adicionar
-        // Task atualizar
-        // task escluir
-
+        // empresa
         Task Adicionar(Empresa empresa);
-
         Task Atualizar(Empresa empresa);
-
         Task Remover(Guid id);
+
+     
     }
 }

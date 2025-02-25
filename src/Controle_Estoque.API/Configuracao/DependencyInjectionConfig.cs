@@ -1,10 +1,14 @@
-﻿using Controle_Estoque.Aplicacao.Interfaces;
-using Controle_Estoque.Aplicacao.Servicos;
+﻿using Controle_Estoque.Aplicacao.Interfaces.Empresas;
+using Controle_Estoque.Aplicacao.Interfaces.Filiais;
+using Controle_Estoque.Aplicacao.Servicos.Empresas;
+using Controle_Estoque.Aplicacao.Servicos.Filiais;
 using Controle_Estoque.Domain.Interfaces.Empresas;
+using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Domain.Interfaces.Notificador;
 using Controle_Estoque.Domain.Notificacoes;
 using Controle_Estoque.Infra.Data.Context;
 using Controle_Estoque.Repositorio.Repositorios.Empresas;
+using Controle_Estoque.Repositorio.Repositorios.Filiais;
 
 namespace Controle_Estoque.API.Configuracao
 {
@@ -17,8 +21,11 @@ namespace Controle_Estoque.API.Configuracao
 
             //Repositorio
             services.AddScoped<IEmpresaRepositorio, EmpresaRepositorio>();
+            services.AddScoped<IFilialRepositorio, FilialRepositorio>();
 
+            //Servicos
             services.AddScoped<IEmpresaServicos, EmpresaServicos>();
+            services.AddScoped<IFilialServicos, FilialServicos>();
 
 
             services.AddScoped<INotificador, Notificador>();

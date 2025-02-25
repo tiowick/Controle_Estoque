@@ -9,18 +9,15 @@ namespace Controle_Estoque.Domain.Interfaces.Empresas
 {
     public interface IEmpresaRepositorio : IRepositorio<Empresa>
     {
-        //Task<IEnumerable<Empresa>> ObterEmpresaPorId(Guid id);
+        Task<Empresa> ObterEmpresaPorId(Guid id);
 
-        //Trazendo todas as filiais aempresa que ela pertence
-        Task<IEnumerable<Empresa>> ObterFilialPorEmpresa(Guid filialId);
+        //Trazendo todas as filiais a empresa que ela pertence
+        Task<IEnumerable<Empresa>> ObterFiliaisPorEmpresa(Guid filialId);
 
-        // busca todas as empresas no banco de dados e inclui as filiais associadas a elas
-        Task<IEnumerable<Empresa>> ObterFiliaisEmpresas();
+        // Busca todas as empresas e inclui suas filiais associadas
+        Task<IEnumerable<Empresa>> ObterEmpresasComFiliais();
 
-        Task<Empresa> ObterFilialEmpresa(Guid id);
-
-
-
+        Task<Empresa> ObterEmpresaPorIdComFiliais(Guid id);
 
 
     }

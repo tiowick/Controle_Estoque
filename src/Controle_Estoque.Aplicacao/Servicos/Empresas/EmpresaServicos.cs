@@ -1,4 +1,4 @@
-﻿using Controle_Estoque.Aplicacao.Interfaces;
+﻿using Controle_Estoque.Aplicacao.Interfaces.Empresas;
 using Controle_Estoque.Domain.Entidades;
 using Controle_Estoque.Domain.Entidades.Validacoes;
 using Controle_Estoque.Domain.Interfaces.Empresas;
@@ -9,15 +9,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Controle_Estoque.Aplicacao.Servicos
+namespace Controle_Estoque.Aplicacao.Servicos.Empresas
 {
     public class EmpresaServicos : BaseServices, IEmpresaServicos
     {
         private readonly IEmpresaRepositorio _empresaRepositorio;
 
-        
-        public EmpresaServicos(IEmpresaRepositorio empresaRepositorio, 
-            INotificador notificador) : base (notificador)
+
+        public EmpresaServicos(IEmpresaRepositorio empresaRepositorio,
+            INotificador notificador) : base(notificador)
         {
             _empresaRepositorio = empresaRepositorio;
         }
@@ -27,20 +27,20 @@ namespace Controle_Estoque.Aplicacao.Servicos
 
             if (!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
 
-            var produtoExistente = _empresaRepositorio.ObterPorId(empresa.Id);
-            if (produtoExistente != null)
+            var empresaExistente = _empresaRepositorio.ObterPorId(empresa.Id);
+            if (empresaExistente != null)
             {
                 Notificar("Ja existe uma empresa com ID informado!");
                 return;
             }
 
-            await _empresaRepositorio.Atualizar(empresa);
+            await _empresaRepositorio.Adicionar(empresa);
         }
 
         public async Task Atualizar(Empresa empresa)
         {
 
-            if(!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
+            if (!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
 
             await _empresaRepositorio.Atualizar(empresa);
         }

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Controle_Estoque.Infra.Mappings
+namespace Controle_Estoque.Infra.Mappings.Empresas
 {
     public class EmpresaMapping : IEntityTypeConfiguration<Empresa>
     {

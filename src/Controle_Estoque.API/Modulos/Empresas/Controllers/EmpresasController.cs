@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Controle_Estoque.API.Controllers;
 using Controle_Estoque.API.Modulos.Empresas.ViewModels;
-using Controle_Estoque.Aplicacao.Interfaces;
+using Controle_Estoque.Aplicacao.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Notificador;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +37,12 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
 
         }
 
+        // var jeferson = await Wick7(j == j.Jeferson).AsNoTracking()
+        //          .Antes de vim pra cá, criar todas as regras das entidades
+        //          .Quando tiver tudo sólido, vem pra essa parte
+        //          .ToListAsync();
+
+   
 
 
     }

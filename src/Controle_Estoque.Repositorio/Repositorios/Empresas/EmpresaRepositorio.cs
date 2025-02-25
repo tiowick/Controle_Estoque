@@ -20,14 +20,19 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
 
         }
 
-        public async Task<Empresa> ObterFilialEmpresa(Guid id)
+        public async Task<Empresa> ObterEmpresaPorId(Guid id)
+        {
+            return await ObterPorId(id);
+        }
+
+        public async Task<Empresa> ObterEmpresaPorIdComFiliais(Guid id)
         {
             return await Db.Empresas.AsNoTracking()
                  .Include(f => f.Filiais)
                  .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<IEnumerable<Empresa>> ObterFiliaisEmpresas()
+        public async Task<IEnumerable<Empresa>> ObterEmpresasComFiliais()
         {
             return await Db.Empresas.AsNoTracking()
                 .Include(f => f.Filiais)
@@ -35,10 +40,12 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Empresa>> ObterFilialPorEmpresa(Guid filialId)
+        public async Task<IEnumerable<Empresa>> ObterFiliaisPorEmpresa(Guid filialId)
         {
             return await Buscar(e => e.FilialId == filialId);
         }
+
+ 
 
     }
 }

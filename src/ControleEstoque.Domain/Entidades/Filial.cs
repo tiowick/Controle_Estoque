@@ -14,6 +14,8 @@ namespace Controle_Estoque.Domain.Entidades
 
         public string? Nome { get; set; } // Nome da filial
 
+        public string? Descricao { get; set; } // Descricao da filial
+
         public string? CNPJ { get; set; } // CNPj da filial
 
         // Propriedade de navegação
