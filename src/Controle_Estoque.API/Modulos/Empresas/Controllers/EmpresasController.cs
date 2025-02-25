@@ -32,7 +32,7 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         [HttpGet]
         public async Task<IEnumerable<EmpresaViewModel>> ObterTodos() //retornar o resultado do repositorio
         {
-            return _mapper.Map<IEnumerable<EmpresaViewModel>>(await _empresaRepositorio.ObterFiliaisEmpresas());
+            return _mapper.Map<IEnumerable<EmpresaViewModel>>(await _empresaRepositorio.ObterEmpresasComFiliais());
 
 
         }
