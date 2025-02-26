@@ -13,7 +13,7 @@ namespace Controle_Estoque.Domain.Entidades.Movimentacoes
     public class Movimentacao : Entity
     {
         public Guid ProdutoId { get; set; } // Chave estrangeira para Produto
-        public Produto Produto { get; set; } = default!;
+        public Produto? Produto { get; set; }
 
         public Guid? EmpresaId { get; set; } // FK opcional para Empresa
         public Empresa? Empresa { get; set; }

@@ -8,7 +8,8 @@ namespace Controle_Estoque.Domain.Enuns
 {
     public enum IMovimentacao
     {
-        saida = 0,
-        entrada = 1
+        entrada = 0,
+        saida = 1
+        
     }
 }

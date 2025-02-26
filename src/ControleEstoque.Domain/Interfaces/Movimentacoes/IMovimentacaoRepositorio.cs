@@ -1,4 +1,5 @@
 ﻿using Controle_Estoque.Domain.Entidades.Movimentacoes;
+using Controle_Estoque.Domain.Enuns;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Controle_Estoque.Domain.Interfaces.Movimentacoes
 {
-    public interface IMovimentacao : IRepositorio<Movimentacao>
+    public interface IMovimentacaoRepositorio : IRepositorio<Movimentacao>
     {
         Task<IEnumerable<Movimentacao>> ObterTodasMovimentacoes();
         Task<Movimentacao> ObterMovimentacaoPorId(Guid id);
