@@ -1,4 +1,4 @@
-﻿using Controle_Estoque.Domain.Entidades;
+﻿using Controle_Estoque.Domain.Entidades.Filiais;
 using System.ComponentModel.DataAnnotations;
 
 namespace Controle_Estoque.API.Modulos.Empresas.ViewModels

@@ -1,4 +1,4 @@
-﻿using Controle_Estoque.Domain.Entidades;
+﻿using Controle_Estoque.Domain.Entidades.Empresas;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,9 +15,6 @@ namespace Controle_Estoque.Infra.Mappings.Empresas
         public void Configure(EntityTypeBuilder<Empresa> builder)
         {
             builder.HasKey(e => e.Id);
-
-            // Define o nome da tabela no banco de dados (opcional)
-            builder.ToTable("Empresas");
 
             // Configuração das propriedades
             builder.Property(e => e.Nome)
@@ -39,6 +36,9 @@ namespace Controle_Estoque.Infra.Mappings.Empresas
 
             // Índice para melhorar a busca por CNPJ
             builder.HasIndex(e => e.CNPJ).IsUnique();
+
+            // Define o nome da tabela no banco de dados (opcional)
+            builder.ToTable("Empresas");
         }
     }
 }

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Filiais;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Controle_Estoque.Domain.Entidades
+namespace Controle_Estoque.Domain.Entidades.Produtos
 {
     public class Produto : Entity
     {

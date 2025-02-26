@@ -1,4 +1,4 @@
-﻿using Controle_Estoque.Domain.Entidades;
+﻿using Controle_Estoque.Domain.Entidades.Empresas;
 using System;
 using System.Collections.Generic;
 using System.Linq;

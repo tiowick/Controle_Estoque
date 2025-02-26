@@ -1,4 +1,7 @@
-﻿using Controle_Estoque.Domain.Entidades;
+﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Filiais;
+using Controle_Estoque.Domain.Entidades.Movimentacoes;
+using Controle_Estoque.Domain.Entidades.Produtos;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;

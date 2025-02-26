@@ -1,4 +1,4 @@
-﻿using Controle_Estoque.Domain.Entidades;
+﻿using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;

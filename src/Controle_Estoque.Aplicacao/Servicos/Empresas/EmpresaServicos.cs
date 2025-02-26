@@ -1,5 +1,5 @@
 ﻿using Controle_Estoque.Aplicacao.Interfaces.Empresas;
-using Controle_Estoque.Domain.Entidades;
+using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Entidades.Validacoes;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Notificador;

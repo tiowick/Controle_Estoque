@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
