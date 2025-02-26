@@ -36,7 +36,7 @@ namespace Controle_Estoque.Infra.Mappings.Movimentacoes
             // Enum armazenado como string no banco de dados
             builder.Property(m => m.TipoMovimentacao)
                 .HasConversion<int>() // Armazena o enum, entrada = 1 saida = 0
-                .HasColumnType("int)")
+                .HasColumnType("int")
                 .IsRequired();
 
             // Quantidade de produtos movimentados
