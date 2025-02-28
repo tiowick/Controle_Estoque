@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modulos\Filiais\" />
     <Folder Include="Modulos\Movimentacao\" />
     <Folder Include="Modulos\Produtos\" />
   </ItemGroup>

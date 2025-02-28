@@ -38,7 +38,7 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
         public async Task<IEnumerable<Empresa>> ObterEmpresasComFiliais()
         {
             return await Db.Empresas.AsNoTracking()
-                .Include(f => f.Filiais)
+                .Include(f => f.Filiais) //propiedade de navegação
                 .OrderBy(e => e.Nome)
                 .ToListAsync();
         }

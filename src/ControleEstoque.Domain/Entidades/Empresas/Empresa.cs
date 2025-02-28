@@ -19,6 +19,8 @@ namespace Controle_Estoque.Domain.Entidades.Empresas
 
         public string? CNPJ { get; set; }
 
+        // criar data de cadastro da empresa
+
         public ICollection<Filial> Filiais { get; set; } = new List<Filial>();
 
 

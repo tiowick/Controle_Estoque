@@ -80,7 +80,7 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
             _empresaAtualizacao.Descricao = empresaCreateViewModel.Descricao;
             _empresaAtualizacao.CNPJ = empresaCreateViewModel.CNPJ;
 
-            await _empresaServicos.Atualizar(_mapper.Map<Empresa>(_empresaAtualizacao));
+            await _empresaServicos.Atualizar(_mapper.Map<Empresa>(_empresaAtualizacao)); 
 
             return CustomResponse(HttpStatusCode.NoContent);
 

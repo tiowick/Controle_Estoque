@@ -1,4 +1,5 @@
-﻿using Controle_Estoque.Domain.Entidades.Filiais;
+﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Filiais;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Controle_Estoque.Domain.Interfaces.Filiais
 {
     public interface IFilialRepositorio : IRepositorio<Filial>
     {
+        Task<IEnumerable<Filial>> Obterfiliais();
+
         // Obtém uma filial pelo ID
         Task<Filial> ObterFilialPorId(Guid id);
 

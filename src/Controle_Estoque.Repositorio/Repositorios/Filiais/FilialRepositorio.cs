@@ -1,4 +1,5 @@
-﻿using Controle_Estoque.Domain.Entidades.Filiais;
+﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,14 @@ namespace Controle_Estoque.Repositorio.Repositorios.Filiais
         public async Task<IEnumerable<Filial>> ObterFiliaisPorEmpresa(Guid empresaId)
         {
             return await Buscar(e => e.EmpresaId == empresaId);
+        }
+
+        public async Task<IEnumerable<Filial>> Obterfiliais()
+        {
+            return await Db.Filiais.AsNoTracking()
+                .Include(f => f.Empresa) //propiedade de navegação
+                .OrderBy(f => f.Nome)
+                .ToListAsync();
         }
     }
 }
