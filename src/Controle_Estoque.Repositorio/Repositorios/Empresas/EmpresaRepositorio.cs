@@ -27,6 +27,14 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
                  .FirstOrDefaultAsync(e => e.Id == id);
         }
 
+        public async Task<IEnumerable<Empresa>> ObterEmpresas()
+        {
+            return await Db.Empresas.AsNoTracking()
+                .Include(e => e.Filiais)
+                .OrderBy(e => e.Descricao)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Empresa>> ObterEmpresasComFiliais()
         {
             return await Db.Empresas.AsNoTracking()

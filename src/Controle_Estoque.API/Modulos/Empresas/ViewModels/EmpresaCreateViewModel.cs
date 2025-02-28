@@ -22,12 +22,6 @@ namespace Controle_Estoque.API.Modulos.Empresas.ViewModels
         [StringLength(15, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 11)]
         public string? CNPJ { get; set; }
 
-        [JsonIgnore]
-        public ICollection<Filial> Filiais { get; set; } = new List<Filial>();
-
-
-
-
 
     }
 }
