@@ -20,11 +20,6 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
 
         }
 
-        public async Task<Empresa> ObterEmpresaPorId(Guid id)
-        {
-            return await ObterPorId(id);
-        }
-
         public async Task<Empresa> ObterEmpresaPorIdComFiliais(Guid id)
         {
             return await Db.Empresas.AsNoTracking()

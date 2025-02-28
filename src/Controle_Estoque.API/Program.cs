@@ -1,3 +1,4 @@
+using Controle_Estoque.API.Configuracao;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -32,8 +33,11 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.ResolveDependencies();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

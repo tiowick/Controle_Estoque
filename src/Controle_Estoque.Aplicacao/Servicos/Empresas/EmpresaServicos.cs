@@ -27,7 +27,7 @@ namespace Controle_Estoque.Aplicacao.Servicos.Empresas
 
             if (!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
 
-            var empresaExistente = _empresaRepositorio.ObterPorId(empresa.Id);
+            var empresaExistente = await _empresaRepositorio.ObterPorId(empresa.Id);
             if (empresaExistente != null)
             {
                 Notificar("Ja existe uma empresa com ID informado!");

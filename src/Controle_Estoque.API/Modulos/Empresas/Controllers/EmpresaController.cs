@@ -2,17 +2,19 @@
 using Controle_Estoque.API.Controllers;
 using Controle_Estoque.API.Modulos.Empresas.ViewModels;
 using Controle_Estoque.Aplicacao.Interfaces.Empresas;
+using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Notificador;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Controle_Estoque.API.Modulos.Empresas.Controllers
 {
-    [Authorize]
+    
     [ApiController]
     [Route("api/empresas")]
-    public class EmpresasController : BasicController
+    public class EmpresaController : BasicController
     {
 
 
@@ -20,7 +22,7 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         private readonly IEmpresaServicos _empresaServicos;
         private readonly IMapper _mapper;
 
-        public EmpresasController(IEmpresaRepositorio empresaRepositorio, IEmpresaServicos empresaServicos,
+        public EmpresaController(IEmpresaRepositorio empresaRepositorio, IEmpresaServicos empresaServicos,
             IMapper mapper, INotificador notificador) : base(notificador)
         {
             _empresaRepositorio = empresaRepositorio;
@@ -30,17 +32,24 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<EmpresaViewModel>> ObterTodos() //retornar o resultado do repositorio
+        public async Task<IEnumerable<EmpresaCreateViewModel>> ObterTodos() //retornar o resultado do repositorio
         {
-            return _mapper.Map<IEnumerable<EmpresaViewModel>>(await _empresaRepositorio.ObterEmpresasComFiliais());
+            return _mapper.Map<IEnumerable<EmpresaCreateViewModel>>(await _empresaRepositorio.ObterEmpresasComFiliais());
 
 
         }
 
-        // var jeferson = await Wick7(j == j.Jeferson).AsNoTracking()
-        //          .Antes de vim pra cá, criar todas as regras das entidades
-        //          .Quando tiver tudo sólido, vem pra essa parte
-        //          .ToListAsync();
+        [HttpPost]
+        public async Task<ActionResult<EmpresaCreateViewModel>> Adicionar(EmpresaCreateViewModel empresaCreateViewModel)
+        {
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            await _empresaServicos.Adicionar(_mapper.Map<Empresa>(empresaCreateViewModel));
+
+            return CustomResponse(HttpStatusCode.Created, empresaCreateViewModel);
+        }
+
+
 
    
 
