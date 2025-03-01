@@ -28,16 +28,31 @@ namespace Controle_Estoque.Aplicacao.Servicos.Filiais
         {
             if (!ExecutarValidacao(new FilialValidacao(), filial)) return;
 
-            var filialExistente = _filialRepositorio.ObterPorId(filial.Id);
+            var filialExistente = await _filialRepositorio.ObterPorId(filial.Id);
             if (filialExistente != null)
             {
-                Notificar("Ja existe uma filial com esse ID informado.");
+                Notificar("Já existe uma filial com esse ID informado.");
+                return;
+            }
+           
+
+            var cnpjExistente = await _filialRepositorio.ObterPorCNPJ(filial.CNPJ);
+            if (cnpjExistente != null)
+            {
+                Notificar("Já existe uma filial com esse CNPJ informado.");
+                return;
+            }
+
+            var empresaExistente = await _filialRepositorio.ObterFiliaisPorEmpresa(filial.EmpresaId);
+            if (cnpjExistente != null)
+            {
+                Notificar("A empresa informada não existe.");
                 return;
             }
 
             await _filialRepositorio.Adicionar(filial);
-
         }
+
 
         public async Task Atualizar(Filial filial)
         {

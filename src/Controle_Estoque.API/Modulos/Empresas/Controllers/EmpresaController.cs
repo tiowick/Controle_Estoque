@@ -37,9 +37,13 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         public async Task<IEnumerable<EmpresaCreateViewModel>> ObterEmpresas() //retornar o resultado do repositorio
         {
             return _mapper.Map<IEnumerable<EmpresaCreateViewModel>>(await _empresaRepositorio.ObterEmpresas());
-
-
         }
+
+        //[HttpGet("filiais")]
+        //public async Task<IEnumerable<EmpresaViewModel>> ObterEmpresasComFiliais()
+        //{
+        //    return _mapper.Map<IEnumerable<EmpresaViewModel>>(await _empresaRepositorio.ObterEmpresasComFiliais());
+        //}
 
 
         [HttpGet("{id:guid}")]

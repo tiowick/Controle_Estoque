@@ -21,12 +21,6 @@ namespace Controle_Estoque.Repositorio.Repositorios.Filiais
 
         }
 
-        public async Task<Filial> ObterFilialPorId(Guid id)
-        {
-            return await ObterPorId(id);
-
-        }
-
         public async Task<IEnumerable<Filial>> ObterFiliaisComEmpresa()
         {
             return await Db.Filiais.AsNoTracking()
@@ -47,5 +41,11 @@ namespace Controle_Estoque.Repositorio.Repositorios.Filiais
                 .OrderBy(f => f.Nome)
                 .ToListAsync();
         }
+
+        public async Task<Filial> ObterPorCNPJ(string? cnpj)
+        {
+            return await Db.Filiais.FirstOrDefaultAsync(f => f.CNPJ == cnpj);
+        }
+
     }
 }

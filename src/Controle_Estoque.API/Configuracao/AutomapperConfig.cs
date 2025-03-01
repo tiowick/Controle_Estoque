@@ -11,7 +11,6 @@ namespace Controle_Estoque.API.Configuracao
         public AutomapperConfig()
         {
             CreateMap<Empresa, EmpresaCreateViewModel>().ReverseMap();
-
             CreateMap<Filial, FilialCreateViewModel>().ReverseMap();
 
 

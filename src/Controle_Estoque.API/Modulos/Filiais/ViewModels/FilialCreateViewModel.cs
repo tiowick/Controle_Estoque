@@ -8,7 +8,7 @@ namespace Controle_Estoque.API.Modulos.Filiais.ViewModels
     {
         public Guid Id { get; set; }
 
-        //public Guid EmpresaId { get; set; } // Chave estrangeira para Empresa
+        public Guid EmpresaId { get; set; } // Chave estrangeira para Empresa
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(200, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]

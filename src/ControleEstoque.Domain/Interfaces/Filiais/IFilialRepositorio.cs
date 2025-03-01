@@ -12,14 +12,14 @@ namespace Controle_Estoque.Domain.Interfaces.Filiais
     {
         Task<IEnumerable<Filial>> Obterfiliais();
 
-        // Obtém uma filial pelo ID
-        Task<Filial> ObterFilialPorId(Guid id);
-
         // Busca todas as empresas e inclui suas filiais associadas
         Task<IEnumerable<Filial>> ObterFiliaisComEmpresa();
 
         // Obtém todas as filiais de uma empresa específica
         Task<IEnumerable<Filial>> ObterFiliaisPorEmpresa(Guid empresaId);
+
+        Task<Filial> ObterPorCNPJ(string? cnpj);
+        
 
     }
 }
