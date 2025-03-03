@@ -9,7 +9,6 @@ namespace Controle_Estoque.Domain.Entidades.Empresas
 {
     public class Empresa : Entity
     {
-        //public long Id { get; set; } = default!; herda o Id de Entity
 
         public Guid FilialId { get; set; }
 
@@ -21,7 +20,7 @@ namespace Controle_Estoque.Domain.Entidades.Empresas
 
         // criar data de cadastro da empresa
 
-        public ICollection<Filial> Filiais { get; set; } = new List<Filial>();
+        public ICollection<Filial>? Filiais { get; set; }
 
 
     }

@@ -12,6 +12,7 @@ namespace Controle_Estoque.Domain.Entidades.Validacoes
     {
         public EmpresaValidacao()
         {
+
             RuleFor(e => e.Nome)
             .NotEmpty().WithMessage("O nome da {PropertyName} é obrigatório.")
             .MaximumLength(100).WithMessage("O nome da {PropertyName}, deve ter no máximo 100 caracteres.");

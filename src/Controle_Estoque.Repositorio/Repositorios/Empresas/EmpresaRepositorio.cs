@@ -1,4 +1,5 @@
 ﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +49,9 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
             return await Buscar(e => e.FilialId == filialId);
         }
 
- 
-
+        public async Task<Empresa> ObterPorCNPJ(string? cnpj)
+        {
+            return await Db.Empresas.FirstOrDefaultAsync(f => f.CNPJ == cnpj);
+        }
     }
 }

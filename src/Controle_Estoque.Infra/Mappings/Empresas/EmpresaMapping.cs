@@ -16,6 +16,7 @@ namespace Controle_Estoque.Infra.Mappings.Empresas
         {
             builder.HasKey(e => e.Id);
 
+
             // Configuração das propriedades
             builder.Property(e => e.Nome)
                 .IsRequired()

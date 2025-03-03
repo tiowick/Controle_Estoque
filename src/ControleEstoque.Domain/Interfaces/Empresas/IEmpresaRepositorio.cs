@@ -1,4 +1,5 @@
 ﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Filiais;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace Controle_Estoque.Domain.Interfaces.Empresas
         Task<IEnumerable<Empresa>> ObterEmpresasComFiliais();
 
         Task<Empresa> ObterEmpresaPorIdComFiliais(Guid id);
+
+        Task<Empresa> ObterPorCNPJ(string? cnpj);
 
 
     }

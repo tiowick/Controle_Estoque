@@ -34,20 +34,17 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<EmpresaCreateViewModel>> ObterEmpresas() //retornar o resultado do repositorio
+        public async Task<IEnumerable<EmpresaViewModel>> ObterEmpresas() //retornar o resultado do repositorio
         {
-            return _mapper.Map<IEnumerable<EmpresaCreateViewModel>>(await _empresaRepositorio.ObterEmpresas());
+            var empresas = await _empresaRepositorio.ObterEmpresasComFiliais();
+            return _mapper.Map<IEnumerable<EmpresaViewModel>>(empresas);
         }
 
-        //[HttpGet("filiais")]
-        //public async Task<IEnumerable<EmpresaViewModel>> ObterEmpresasComFiliais()
-        //{
-        //    return _mapper.Map<IEnumerable<EmpresaViewModel>>(await _empresaRepositorio.ObterEmpresasComFiliais());
-        //}
 
-
+        
+        // fazer trazer as suas filiais também
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<EmpresaCreateViewModel>> ObterPorId(Guid id)
+        public async Task<ActionResult<EmpresaViewModel>> ObterPorId(Guid id)
         {
             var EmpresaViewModel = await ObterEmpresa(id);
 
@@ -58,19 +55,21 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<EmpresaCreateViewModel>> Adicionar(EmpresaCreateViewModel empresaCreateViewModel)
+        public async Task<ActionResult<EmpresaViewModel>> Adicionar(EmpresaCreateViewModel empresaCreateViewModel)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            await _empresaServicos.Adicionar(_mapper.Map<Empresa>(empresaCreateViewModel));
+            // O AutoMapper ignora o ID, então o construtor de Empresa gerará o Guid automaticamente.
+            var empresa = _mapper.Map<Empresa>(empresaCreateViewModel);
+            await _empresaServicos.Adicionar(empresa);
 
-            return CustomResponse(HttpStatusCode.Created, empresaCreateViewModel);
+            return CustomResponse(HttpStatusCode.Created, _mapper.Map<EmpresaViewModel>(empresa));
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, EmpresaCreateViewModel empresaCreateViewModel)
+        public async Task<IActionResult> Atualizar(Guid id, EmpresaViewModel empresaViewModel)
         {
-            if (id != empresaCreateViewModel.Id)
+            if (id != empresaViewModel.Id)
             {
                 NotificarErro("Os ids informados não são iguais!");
                 return CustomResponse();
@@ -80,9 +79,9 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
 
             var _empresaAtualizacao = await ObterEmpresa(id);
 
-            _empresaAtualizacao.Nome = empresaCreateViewModel.Nome;
-            _empresaAtualizacao.Descricao = empresaCreateViewModel.Descricao;
-            _empresaAtualizacao.CNPJ = empresaCreateViewModel.CNPJ;
+            _empresaAtualizacao.Nome = empresaViewModel.Nome;
+            _empresaAtualizacao.Descricao = empresaViewModel.Descricao;
+            _empresaAtualizacao.CNPJ = empresaViewModel.CNPJ;
 
             await _empresaServicos.Atualizar(_mapper.Map<Empresa>(_empresaAtualizacao)); 
 
@@ -92,7 +91,7 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
 
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<EmpresaCreateViewModel>> Excluir(Guid id)
+        public async Task<ActionResult<EmpresaViewModel>> Excluir(Guid id)
         {
             var _empresa = await ObterEmpresa(id);
 
@@ -105,9 +104,9 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         }
 
 
-        private async Task<EmpresaCreateViewModel> ObterEmpresa(Guid id)
+        private async Task<EmpresaViewModel> ObterEmpresa(Guid id)
         {
-            return _mapper.Map<EmpresaCreateViewModel>(await _empresaRepositorio.ObterPorId(id));
+            return _mapper.Map<EmpresaViewModel>(await _empresaRepositorio.ObterPorId(id));
         }
 
 

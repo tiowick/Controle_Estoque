@@ -10,8 +10,15 @@ namespace Controle_Estoque.API.Configuracao
     {
         public AutomapperConfig()
         {
-            CreateMap<Empresa, EmpresaCreateViewModel>().ReverseMap();
+            CreateMap<EmpresaCreateViewModel, Empresa>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            
+            CreateMap<Empresa, EmpresaViewModel>().ReverseMap(); // Mapeamento para atualização, busca etc. pode manter o Id
+
             CreateMap<Filial, FilialCreateViewModel>().ReverseMap();
+
+
 
 
         }
