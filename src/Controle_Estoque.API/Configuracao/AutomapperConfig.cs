@@ -13,10 +13,13 @@ namespace Controle_Estoque.API.Configuracao
             CreateMap<EmpresaCreateViewModel, Empresa>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore());
 
-            
+
+            CreateMap<FilialCreateViewModel, Filial>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
             CreateMap<Empresa, EmpresaViewModel>().ReverseMap(); // Mapeamento para atualização, busca etc. pode manter o Id
 
-            CreateMap<Filial, FilialCreateViewModel>().ReverseMap();
+            CreateMap<Filial, FilialViewModel>().ReverseMap();
 
 
 

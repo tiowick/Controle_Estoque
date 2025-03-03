@@ -30,15 +30,15 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FilialCreateViewModel>> ObterFiliais() //retornar o resultado do repositorio
+        public async Task<IEnumerable<FilialViewModel>> ObterFiliais() //retornar o resultado do repositorio
         {
-            return _mapper.Map<IEnumerable<FilialCreateViewModel>>(await _filialRepositorio.Obterfiliais());
+            return _mapper.Map<IEnumerable<FilialViewModel>>(await _filialRepositorio.Obterfiliais());
 
         }
 
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<FilialCreateViewModel>> ObterPorId(Guid id)
+        public async Task<ActionResult<FilialViewModel>> ObterPorId(Guid id)
         {
             var _filialViewModel = await ObterFilial(id);
 
@@ -50,18 +50,20 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<FilialCreateViewModel>> Adicionar(FilialCreateViewModel filialCreateViewModel)
+        public async Task<ActionResult<FilialViewModel>> Adicionar(FilialCreateViewModel filialCreateViewModel)
+        
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            await _filialServicos.Adicionar(_mapper.Map<Filial>(filialCreateViewModel));
+            var filial = _mapper.Map<Filial>(filialCreateViewModel);
+            await _filialServicos.Adicionar(filial);
 
-            return CustomResponse(HttpStatusCode.Created, filialCreateViewModel);
+            return CustomResponse(HttpStatusCode.Created, _mapper.Map<FilialViewModel>(filial));
         }
 
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, FilialCreateViewModel filialCreateViewModel)
+        public async Task<IActionResult> Atualizar(Guid id, FilialViewModel filialCreateViewModel)
         {
             if (id != filialCreateViewModel.Id)
             {
@@ -88,7 +90,7 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
 
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<FilialCreateViewModel>> Excluir(Guid id)
+        public async Task<ActionResult<FilialViewModel>> Excluir(Guid id)
         {
             var _empresa = await ObterFilial(id);
 
@@ -102,9 +104,9 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
 
 
 
-        private async Task<FilialCreateViewModel> ObterFilial(Guid id)
+        private async Task<FilialViewModel> ObterFilial(Guid id)
         {
-            return _mapper.Map<FilialCreateViewModel>(await _filialRepositorio.ObterPorId(id));
+            return _mapper.Map<FilialViewModel>(await _filialRepositorio.ObterPorId(id));
         }
 
 

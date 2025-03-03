@@ -59,7 +59,6 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            // O AutoMapper ignora o ID, então o construtor de Empresa gerará o Guid automaticamente.
             var empresa = _mapper.Map<Empresa>(empresaCreateViewModel);
             await _empresaServicos.Adicionar(empresa);
 

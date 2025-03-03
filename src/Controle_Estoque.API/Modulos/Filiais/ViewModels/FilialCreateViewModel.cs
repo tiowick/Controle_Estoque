@@ -1,13 +1,9 @@
-﻿using Controle_Estoque.Domain.Entidades.Empresas;
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Controle_Estoque.API.Modulos.Filiais.ViewModels
 {
     public class FilialCreateViewModel
     {
-        public Guid Id { get; set; }
-
         public Guid EmpresaId { get; set; } // Chave estrangeira para Empresa
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -21,8 +17,5 @@ namespace Controle_Estoque.API.Modulos.Filiais.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(15, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 11)]
         public string? CNPJ { get; set; } // CNPj da filial
-
-        [JsonIgnore]
-        public Empresa? Empresa { get; set; }
     }
 }
