@@ -1,4 +1,5 @@
 ﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Estoques;
 using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Entidades.Movimentacoes;
 using Controle_Estoque.Domain.Entidades.Produtos;
@@ -26,6 +27,7 @@ namespace Controle_Estoque.Infra.Data.Context
         public DbSet<Filial> Filiais { get; set; }
         public DbSet<Movimentacao> Movimentacoes { get; set; }
         public DbSet<Produto> Produtos { get; set; }
+        public DbSet<Estoque> Estoques { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

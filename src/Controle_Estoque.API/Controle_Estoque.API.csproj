@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Modulos\Movimentacao\" />
-    <Folder Include="Modulos\Produtos\" />
   </ItemGroup>
 
 </Project>
