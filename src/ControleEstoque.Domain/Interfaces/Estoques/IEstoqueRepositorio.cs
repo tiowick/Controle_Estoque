@@ -10,12 +10,14 @@ namespace Controle_Estoque.Domain.Interfaces.Estoques
     public interface IEstoqueRepositorio : IRepositorio<Estoque>
     {
         // Busca o registro de estoque para um produto específico
-        Task<Estoque> ObterPorProdutoId(Guid produtoId);
+        Task<Estoque> ObterEstoquePorProdutoId(Guid produtoId);
 
         // Busca todos os registros de estoque de uma empresa
-        Task<IEnumerable<Estoque>> ObterPorEmpresaId(Guid empresaId);
+        Task<IEnumerable<Estoque>> ObterEstoquePorEmpresaId(Guid empresaId);
 
         // Busca todos os registros de estoque de uma filial específica
-        Task<IEnumerable<Estoque>> ObterPorFilialId(Guid filialId);
+        Task<IEnumerable<Estoque>> ObterEstoquePorFilialId(Guid filialId);
+
+
     }
 }

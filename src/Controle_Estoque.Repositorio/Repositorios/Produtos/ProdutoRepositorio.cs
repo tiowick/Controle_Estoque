@@ -34,8 +34,8 @@ namespace Controle_Estoque.Repositorio.Repositorios.Produtos
         public async Task<IEnumerable<Produto>> ObterProdutosComEmpresas()
         {
             return await Db.Produtos.AsNoTracking()
-                .Include(p => p.Nome)
-                .OrderBy(e => e.Empresa)
+                .Include(p => p.Empresa)
+                .OrderBy(e => e.Nome)
                 .ToListAsync();
         }
 

@@ -32,6 +32,27 @@ namespace Controle_Estoque.API.Modulos.Produtos.Controllers
         }
 
 
+        [HttpGet]
+        public async Task<IEnumerable<ProdutoViewModel>> ObterTodos() //retornar o resultado do repositorio
+        {
+            var empresas = await _produtoRepositorio.ObterProdutosComEmpresas();
+            return _mapper.Map<IEnumerable<ProdutoViewModel>>(empresas);
+        }
+
+
+        // fazer trazer as suas filiais também
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<ProdutoViewModel>> ObterPorId(Guid id)
+        {
+            var _produtoViewModel = await ObterProduto(id);
+
+            if (_produtoViewModel == null) return NotFound();
+
+            return _produtoViewModel;
+
+        }
+
+
 
         [HttpPost]
         public async Task<ActionResult<ProdutoViewModel>> Adicionar(ProdutoCreateViewModel produtoCreateViewModel)
@@ -44,9 +65,53 @@ namespace Controle_Estoque.API.Modulos.Produtos.Controllers
             return CustomResponse(HttpStatusCode.Created, _mapper.Map<ProdutoViewModel>(_produto));
         }
 
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Atualizar(Guid id, ProdutoViewModel produtoViewModel)
+        {
+            if (id != produtoViewModel.Id)
+            {
+                NotificarErro("Os ids informados não são iguais!");
+                return CustomResponse();
+            }
+
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            var _produtoAtualizacao = await ObterProduto(id);
+
+
+            _produtoAtualizacao.EmpresaId = produtoViewModel.EmpresaId;
+            _produtoAtualizacao.FilialId = produtoViewModel.FilialId;
+            _produtoAtualizacao.Nome = produtoViewModel.Nome;
+            _produtoAtualizacao.Descricao = produtoViewModel.Descricao;
+            _produtoAtualizacao.Preco = produtoViewModel.Preco;
+            _produtoAtualizacao.Ativo = produtoViewModel.Ativo;
+           
+
+            await _produtoServico.Atualizar(_mapper.Map<Produto>(_produtoAtualizacao));
+
+            return CustomResponse(HttpStatusCode.NoContent);
+
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<ProdutoViewModel>> Excluir(Guid id)
+        {
+            var _produto = await ObterProduto(id);
+
+            if (_produto == null) return NotFound();
+
+            await _produtoServico.Remover(id);
+
+            return CustomResponse(HttpStatusCode.NoContent);
+
+        }
 
 
 
+        private async Task<ProdutoViewModel> ObterProduto(Guid id)
+        {
+            return _mapper.Map<ProdutoViewModel>(await _produtoRepositorio.ObterPorId(id));
+        }
 
 
     }

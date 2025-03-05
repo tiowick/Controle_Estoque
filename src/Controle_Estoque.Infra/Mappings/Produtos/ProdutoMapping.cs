@@ -23,6 +23,16 @@ namespace Controle_Estoque.Infra.Mappings.Produtos
                 .IsRequired()
                 .HasColumnType("varchar(2000)");
 
+            builder.Property(x => x.DataCadastro)
+                .HasDefaultValueSql("NOW()")  // Para pegar a data atual no MySQL
+                .ValueGeneratedOnAdd()         // Garante que o valor será gerado pelo banco
+                .IsRequired();
+
+            builder.Property(x => x.Preco)
+                .HasColumnType("decimal(10,2)")
+                .IsRequired();
+
+
             builder.ToTable("Produtos");
         }
     }

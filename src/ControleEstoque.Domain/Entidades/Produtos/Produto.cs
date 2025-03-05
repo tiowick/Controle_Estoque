@@ -20,7 +20,7 @@ namespace Controle_Estoque.Domain.Entidades.Produtos
 
         public string? Descricao { get; set; }
 
-        public DateTime? DataCadastro { get; set; }
+        public DateTime DataCadastro { get; set; }
 
         public decimal Preco { get; set; }
 

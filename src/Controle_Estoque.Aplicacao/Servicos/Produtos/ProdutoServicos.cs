@@ -25,7 +25,7 @@ namespace Controle_Estoque.Aplicacao.Servicos.Produtos
         {
             if (!ExecutarValidacao(new ProdutoValidacao(), produto)) return;
 
-            var produtoExistente = _produtoRepositorio.ObterPorId(produto.Id);
+            var produtoExistente = await _produtoRepositorio.ObterPorId(produto.Id);
             if (produtoExistente != null)
             {
                 Notificar("Ja existe um produto com ID informado!");
