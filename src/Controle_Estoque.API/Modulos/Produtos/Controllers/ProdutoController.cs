@@ -35,8 +35,13 @@ namespace Controle_Estoque.API.Modulos.Produtos.Controllers
         [HttpGet]
         public async Task<IEnumerable<ProdutoViewModel>> ObterTodos() //retornar o resultado do repositorio
         {
+<<<<<<< HEAD
             var _produto = await _produtoRepositorio.ObterProdutos();
             return _mapper.Map<IEnumerable<ProdutoViewModel>>(_produto);
+=======
+            var _produtos = await _produtoRepositorio.ObterProdutosComEmpresas();
+            return _mapper.Map<IEnumerable<ProdutoViewModel>>(_produtos);
+>>>>>>> 7ad1e84b8ce6c408b5107e5e90bfc0f6bf7006aa
         }
 
         [HttpGet("{id:guid}")]
