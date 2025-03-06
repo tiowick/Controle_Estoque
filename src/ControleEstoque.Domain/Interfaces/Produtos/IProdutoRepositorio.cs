@@ -14,7 +14,7 @@ namespace Controle_Estoque.Domain.Interfaces.Produtos
         Task<IEnumerable<Produto>> ObterProdutosPorEmpresa(Guid empresaId);
 
         // Aqui to buscando Produtos com suas empresas
-        Task<IEnumerable<Produto>> ObterProdutosComEmpresas();
+        Task<IEnumerable<Produto>> ObterProdutos();
 
         // Aqui to buscando produtos especifico
         Task<Produto> ObterProdutoPorIdComEmpresa(Guid id);

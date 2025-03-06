@@ -31,12 +31,9 @@ namespace Controle_Estoque.Repositorio.Repositorios.Produtos
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task<IEnumerable<Produto>> ObterProdutosComEmpresas()
+        public async Task<IEnumerable<Produto>> ObterProdutos()
         {
-            return await Db.Produtos.AsNoTracking()
-                .Include(p => p.Empresa)
-                .OrderBy(e => e.Nome)
-                .ToListAsync();
+            return await Db.Produtos.ToListAsync();
         }
 
         public async Task<IEnumerable<Produto>> ObterProdutosComFiliais()

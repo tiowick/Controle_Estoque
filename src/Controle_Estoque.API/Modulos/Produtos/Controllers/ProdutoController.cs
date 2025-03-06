@@ -35,24 +35,19 @@ namespace Controle_Estoque.API.Modulos.Produtos.Controllers
         [HttpGet]
         public async Task<IEnumerable<ProdutoViewModel>> ObterTodos() //retornar o resultado do repositorio
         {
-            var empresas = await _produtoRepositorio.ObterProdutosComEmpresas();
-            return _mapper.Map<IEnumerable<ProdutoViewModel>>(empresas);
+            var _produto = await _produtoRepositorio.ObterProdutos();
+            return _mapper.Map<IEnumerable<ProdutoViewModel>>(_produto);
         }
 
-
-        // fazer trazer as suas filiais também
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<ProdutoViewModel>> ObterPorId(Guid id)
         {
             var _produtoViewModel = await ObterProduto(id);
-
             if (_produtoViewModel == null) return NotFound();
 
             return _produtoViewModel;
 
         }
-
-
 
         [HttpPost]
         public async Task<ActionResult<ProdutoViewModel>> Adicionar(ProdutoCreateViewModel produtoCreateViewModel)
@@ -76,18 +71,9 @@ namespace Controle_Estoque.API.Modulos.Produtos.Controllers
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var _produtoAtualizacao = await ObterProduto(id);
+            var produtoAtualizado = _mapper.Map<Produto>(produtoViewModel);
 
-
-            _produtoAtualizacao.EmpresaId = produtoViewModel.EmpresaId;
-            _produtoAtualizacao.FilialId = produtoViewModel.FilialId;
-            _produtoAtualizacao.Nome = produtoViewModel.Nome;
-            _produtoAtualizacao.Descricao = produtoViewModel.Descricao;
-            _produtoAtualizacao.Preco = produtoViewModel.Preco;
-            _produtoAtualizacao.Ativo = produtoViewModel.Ativo;
-           
-
-            await _produtoServico.Atualizar(_mapper.Map<Produto>(_produtoAtualizacao));
+            await _produtoServico.Atualizar(produtoAtualizado);
 
             return CustomResponse(HttpStatusCode.NoContent);
 
@@ -105,8 +91,6 @@ namespace Controle_Estoque.API.Modulos.Produtos.Controllers
             return CustomResponse(HttpStatusCode.NoContent);
 
         }
-
-
 
         private async Task<ProdutoViewModel> ObterProduto(Guid id)
         {

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using Controle_Estoque.API.Controllers;
 using Controle_Estoque.API.Modulos.Empresas.ViewModels;
+using Controle_Estoque.API.Modulos.Filiais.ViewModels;
 using Controle_Estoque.Aplicacao.Interfaces.Empresas;
 using Controle_Estoque.Aplicacao.Interfaces.Produtos;
 using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Entidades.Produtos;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Notificador;
@@ -76,13 +78,8 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var _empresaAtualizacao = await ObterEmpresa(id);
-
-            _empresaAtualizacao.Nome = empresaViewModel.Nome;
-            _empresaAtualizacao.Descricao = empresaViewModel.Descricao;
-            _empresaAtualizacao.CNPJ = empresaViewModel.CNPJ;
-
-            await _empresaServicos.Atualizar(_mapper.Map<Empresa>(_empresaAtualizacao)); 
+            var _empresaAtualizada = _mapper.Map<Empresa>(empresaViewModel);
+            await _empresaServicos.Atualizar(_empresaAtualizada);
 
             return CustomResponse(HttpStatusCode.NoContent);
 

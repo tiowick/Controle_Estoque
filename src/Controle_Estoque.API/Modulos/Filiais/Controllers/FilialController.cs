@@ -2,9 +2,11 @@
 using Controle_Estoque.API.Controllers;
 using Controle_Estoque.API.Modulos.Empresas.ViewModels;
 using Controle_Estoque.API.Modulos.Filiais.ViewModels;
+using Controle_Estoque.API.Modulos.Produtos.ViewModels;
 using Controle_Estoque.Aplicacao.Interfaces.Filiais;
 using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Entidades.Filiais;
+using Controle_Estoque.Domain.Entidades.Produtos;
 using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Domain.Interfaces.Notificador;
 using Microsoft.AspNetCore.Mvc;
@@ -63,9 +65,9 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
 
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, FilialViewModel filialCreateViewModel)
+        public async Task<IActionResult> Atualizar(Guid id, FilialViewModel filialViewModel)
         {
-            if (id != filialCreateViewModel.Id)
+            if (id != filialViewModel.Id)
             {
                 NotificarErro("Os ids informados não são iguais!");
                 return CustomResponse();
@@ -73,21 +75,12 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
 
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var _filialAtualizacao = await ObterFilial(id);
-
-
-            _filialAtualizacao.EmpresaId = filialCreateViewModel.EmpresaId;
-            _filialAtualizacao.Nome = filialCreateViewModel.Nome;
-            _filialAtualizacao.Descricao = filialCreateViewModel.Descricao;
-            _filialAtualizacao.CNPJ = filialCreateViewModel.CNPJ;
-
-            await _filialServicos.Atualizar(_mapper.Map<Filial>(_filialAtualizacao));
+            var _filialAtualizada = _mapper.Map<Filial>(filialViewModel);
+            await _filialServicos.Atualizar(_filialAtualizada);
 
             return CustomResponse(HttpStatusCode.NoContent);
 
         }
-
-
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FilialViewModel>> Excluir(Guid id)
@@ -101,8 +94,6 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
             return CustomResponse(HttpStatusCode.NoContent);
 
         }
-
-
 
         private async Task<FilialViewModel> ObterFilial(Guid id)
         {
