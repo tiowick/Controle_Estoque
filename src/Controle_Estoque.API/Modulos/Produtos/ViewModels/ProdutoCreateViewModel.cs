@@ -33,11 +33,8 @@ namespace Controle_Estoque.API.Modulos.Produtos.ViewModels
 
         public bool Ativo { get; set; }
 
-       
-
     }
 
-   
 }
 
 

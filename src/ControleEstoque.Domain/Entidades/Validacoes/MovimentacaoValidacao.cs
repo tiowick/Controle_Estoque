@@ -22,8 +22,7 @@ namespace Controle_Estoque.Domain.Entidades.Validacoes
                 .GreaterThan(0).WithMessage("A quantidade deve ser maior que zero.");
 
             RuleFor(m => m.DataMovimentacao)
-                .NotEmpty().WithMessage("A data da {PropertyName} é obrigatória.")
-                .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("A data da movimentação não pode ser no futuro.");
+                .LessThanOrEqualTo(DateTime.Now).WithMessage("A data de cadastro não pode ser no futuro.");
 
             RuleFor(m => m)
                 .Must(m => m.EmpresaId.HasValue || m.FilialId.HasValue)

@@ -44,10 +44,12 @@ namespace Controle_Estoque.Infra.Mappings.Movimentacoes
                 .IsRequired();
 
             // Data da movimentação
-            builder.Property(m => m.DataMovimentacao)
-                .IsRequired()
-                .HasColumnType("datetime");
-
+            builder.Property(x => x.DataMovimentacao)
+               /*.HasColumnType("datetime(6)")    */          // Define o tipo com precisão 6
+               .HasDefaultValueSql("CURRENT_TIMESTAMP(6)") // Define o valor padrão
+               .ValueGeneratedOnAdd()                      // Valor gerado na inserção
+               .IsRequired();                              // Torna o campo obrigatório
+                                                   // Garante que o valor será gerado pelo banco
 
             // Definir a tabela no banco de dados (opcional)
             builder.ToTable("Movimentacoes");

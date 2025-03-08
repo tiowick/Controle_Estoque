@@ -28,7 +28,7 @@ namespace Controle_Estoque.Repositorio.Repositorios.Movimentacoes
         public async Task<IEnumerable<Movimentacao>> ObterTodasMovimentacoes()
         {
             return await Db.Movimentacoes.AsNoTracking()
-                .Include(e => e.TipoMovimentacao)
+                .Include(e => e.Produto)
                 .OrderBy(p => p.Quantidade)
                 .ToListAsync();
         }
@@ -49,7 +49,7 @@ namespace Controle_Estoque.Repositorio.Repositorios.Movimentacoes
             return await Buscar(p => p.ProdutoId == produtoId);
         }
 
-        public async Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorTipo(IMovimentacao tipo)
+        public async Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorTipo(IMovimentacao tipo) // entrada e saida
         {
             return await Buscar(m => m.TipoMovimentacao == tipo);
         }

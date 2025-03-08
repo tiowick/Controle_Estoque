@@ -18,6 +18,10 @@ namespace Controle_Estoque.Domain.Interfaces.Estoques
         // Busca todos os registros de estoque de uma filial específica
         Task<IEnumerable<Estoque>> ObterEstoquePorFilialId(Guid filialId);
 
+        Task<IEnumerable<Estoque>> ObterEstoque();
+
+
+
 
     }
 }

@@ -32,7 +32,7 @@ namespace Controle_Estoque.Aplicacao.Servicos.Produtos
                 return;
             }
 
-            await _produtoRepositorio.Adicionar(produto); ;
+            await _produtoRepositorio.Adicionar(produto); 
         }
 
         public async Task Atualizar(Produto produto)

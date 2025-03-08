@@ -19,6 +19,11 @@ namespace Controle_Estoque.Repositorio.Repositorios.Estoques
 
         }
 
+        public async Task<IEnumerable<Estoque>> ObterEstoque()
+        {
+            return await Db.Estoques.ToListAsync();
+        }
+
         public async Task<IEnumerable<Estoque>> ObterEstoquePorEmpresaId(Guid empresaId)
         {
             return await Buscar(e => e.EmpresaId == empresaId);

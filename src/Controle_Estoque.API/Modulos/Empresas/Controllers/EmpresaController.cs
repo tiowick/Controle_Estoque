@@ -42,8 +42,6 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
             return _mapper.Map<IEnumerable<EmpresaViewModel>>(empresas);
         }
 
-
-        
         // fazer trazer as suas filiais também
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<EmpresaViewModel>> ObterPorId(Guid id)
@@ -84,7 +82,6 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
             return CustomResponse(HttpStatusCode.NoContent);
 
         }
-
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<EmpresaViewModel>> Excluir(Guid id)

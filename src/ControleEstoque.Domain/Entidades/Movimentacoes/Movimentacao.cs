@@ -25,6 +25,6 @@ namespace Controle_Estoque.Domain.Entidades.Movimentacoes
 
         public int Quantidade { get; set; }
 
-        public DateTime DataMovimentacao { get; set; }
+        public DateTime? DataMovimentacao { get; set; }
     }
 }

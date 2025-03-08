@@ -24,7 +24,7 @@ namespace Controle_Estoque.Infra.Mappings.Produtos
                 .HasColumnType("varchar(2000)");
 
             builder.Property(x => x.DataCadastro)
-                .HasDefaultValueSql("NOW()")  // Para pegar a data atual no MySQL
+                .HasDefaultValueSql("CURRENT_TIMESTAMP(6)")  // Para pegar a data atual no MySQL
                 .ValueGeneratedOnAdd()         // Garante que o valor será gerado pelo banco
                 .IsRequired();
 

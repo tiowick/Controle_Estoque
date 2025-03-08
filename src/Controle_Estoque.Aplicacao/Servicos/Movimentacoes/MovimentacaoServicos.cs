@@ -1,8 +1,11 @@
 ﻿using Controle_Estoque.Aplicacao.Interfaces.Movimentacoes;
 using Controle_Estoque.Domain.Entidades.Movimentacoes;
+using Controle_Estoque.Domain.Entidades.Produtos;
+using Controle_Estoque.Domain.Entidades.Validacoes;
 using Controle_Estoque.Domain.Enuns;
 using Controle_Estoque.Domain.Interfaces.Movimentacoes;
 using Controle_Estoque.Domain.Interfaces.Notificador;
+using Controle_Estoque.Domain.Interfaces.Produtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,23 +25,14 @@ namespace Controle_Estoque.Aplicacao.Servicos.Movimentacoes
         }
 
 
-        public async Task<bool> RegistrarMovimentacao(Movimentacao movimentacao)
+        public async Task RegistrarMovimentacao(Movimentacao movimentacao)
         {
-            if (!await ValidarMovimentacao(movimentacao)) return false;
+            if (!ExecutarValidacao(new MovimentacaoValidacao(), movimentacao)) return;
 
-            // Adiciona a movimentação
+            var movimentacaoExistente = await _movimentacaoRepositorio.ObterPorId(movimentacao.Id);
+            if (movimentacaoExistente != null) return;     
+ 
             await _movimentacaoRepositorio.Adicionar(movimentacao);
-
-            var produto = await _movimentacaoRepositorio.ObterMovimentacaoPorId(movimentacao.ProdutoId);
-            if (produto == null) return false;
-
-            produto.Quantidade += movimentacao.TipoMovimentacao == IMovimentacao.entrada
-                ? movimentacao.Quantidade
-                : -movimentacao.Quantidade;
-
-            await _movimentacaoRepositorio.Atualizar(produto);
-
-            return true;
         }
 
 
