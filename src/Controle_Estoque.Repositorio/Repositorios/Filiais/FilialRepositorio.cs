@@ -1,10 +1,16 @@
-﻿using Controle_Estoque.Domain.Entidades.Empresas;
+﻿using Controle_Estoque.Domain.Entidades;
+using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Entidades.Filiais;
+using Controle_Estoque.Domain.Entidades.Reflection;
+using Controle_Estoque.Domain.Entidades.Validacoes.Padronizar.Texto;
+using Controle_Estoque.Domain.Enuns;
 using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,28 +29,78 @@ namespace Controle_Estoque.Repositorio.Repositorios.Filiais
 
         public async Task<IEnumerable<Filial>> ObterFiliaisComEmpresa()
         {
-            return await Db.Filiais.AsNoTracking()
-                .Include(f => f.Nome)
-                .OrderBy(e => e.Empresa)
-                .ToListAsync();
+
+            try
+            {
+                return await Db.Filiais.AsNoTracking()
+                   .Include(f => f.Empresa)
+                   .OrderBy(f => f.Nome)
+                   .ToListAsync()
+                   .ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
         }
+
+
 
         public async Task<IEnumerable<Filial>> ObterFiliaisPorEmpresa(Guid empresaId)
         {
-            return await Buscar(e => e.EmpresaId == empresaId);
+
+            try
+            {
+                var _return = await Buscar(e => e.EmpresaId == empresaId);
+
+                return await Task.FromResult(_return).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
         }
 
         public async Task<IEnumerable<Filial>> Obterfiliais()
         {
-            return await Db.Filiais.AsNoTracking()
-                .Include(f => f.Empresa) //propiedade de navegação
-                .OrderBy(f => f.Nome)
-                .ToListAsync();
+            try
+            {
+                return await Db.Filiais.AsNoTracking()
+                 .Include(f => f.Empresa)
+                 .OrderBy(f => f.Nome)
+                 .ToListAsync()
+                 .ConfigureAwait(false);
+
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
         }
+
+
 
         public async Task<Filial> ObterPorCNPJ(string? cnpj)
         {
-            return await Db.Filiais.FirstOrDefaultAsync(f => f.CNPJ == cnpj);
+            try
+            {
+                var _return = await Db.Filiais.FirstOrDefaultAsync(f => f.CNPJ == cnpj);
+
+                return await Task.FromResult(_return).ConfigureAwait(false);
+            }
+
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+
         }
 
     }

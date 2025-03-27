@@ -1,6 +1,8 @@
 ﻿using Controle_Estoque.Aplicacao.Interfaces.Produtos;
+using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Entidades.Produtos;
 using Controle_Estoque.Domain.Entidades.Validacoes;
+using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Domain.Interfaces.Notificador;
 using Controle_Estoque.Domain.Interfaces.Produtos;
 using System;
@@ -23,21 +25,23 @@ namespace Controle_Estoque.Aplicacao.Servicos.Produtos
 
         public async Task Adicionar(Produto produto)
         {
-            if (!ExecutarValidacao(new ProdutoValidacao(), produto)) return;
-
-            var produtoExistente = await _produtoRepositorio.ObterPorId(produto.Id);
-            if (produtoExistente != null)
+            var resultado = await new ProdutoValidacao(_produtoRepositorio).ValidateAsync(produto);
+            if (!resultado.IsValid)
             {
-                Notificar("Ja existe um produto com ID informado!");
+                resultado.Errors.ForEach(e => Notificar(e.ErrorMessage));
                 return;
             }
-
             await _produtoRepositorio.Adicionar(produto); 
         }
 
         public async Task Atualizar(Produto produto)
         {
-            if (!ExecutarValidacao(new ProdutoValidacao(), produto)) return;
+            var resultado = await new ProdutoValidacao(_produtoRepositorio).ValidateAsync(produto);
+            if (!resultado.IsValid)
+            {
+                resultado.Errors.ForEach(e => Notificar(e.ErrorMessage));
+                return;
+            }
 
             await _produtoRepositorio.Atualizar(produto);
         }

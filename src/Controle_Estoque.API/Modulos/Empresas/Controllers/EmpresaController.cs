@@ -7,6 +7,7 @@ using Controle_Estoque.Aplicacao.Interfaces.Produtos;
 using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Entidades.Produtos;
+using Controle_Estoque.Domain.Entidades.Reflection;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Notificador;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +21,6 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
     [Route("api/empresas")]
     public class EmpresaController : BasicController
     {
-
 
         private readonly IEmpresaRepositorio _empresaRepositorio;
         private readonly IEmpresaServicos _empresaServicos;
@@ -36,63 +36,90 @@ namespace Controle_Estoque.API.Modulos.Empresas.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<EmpresaViewModel>> ObterEmpresas() //retornar o resultado do repositorio
+        public async Task<ActionResult<IEnumerable<EmpresaViewModel>>> ObterEmpresas() //retornar o resultado do repositorio
         {
-            var empresas = await _empresaRepositorio.ObterEmpresasComFiliais();
-            return _mapper.Map<IEnumerable<EmpresaViewModel>>(empresas);
+
+            try
+            {
+
+                var _empresas = await _empresaRepositorio.ObterEmpresasComFiliais();
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<EmpresaViewModel>>(_empresas)); ;
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+
         }
 
-        // fazer trazer as suas filiais também
+        
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<EmpresaViewModel>> ObterPorId(Guid id)
         {
-            var EmpresaViewModel = await ObterEmpresa(id);
 
-            if (EmpresaViewModel == null) return NotFound();
+            try
+            {
+                var _empresaViewModel = await ObterEmpresa(id);
+                if (_empresaViewModel == null) return NotFound();
 
-            return EmpresaViewModel;
-
+                return Ok(_empresaViewModel);
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+           
         }
 
         [HttpPost]
         public async Task<ActionResult<EmpresaViewModel>> Adicionar(EmpresaCreateViewModel empresaCreateViewModel)
         {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
+          
+            try
+            {
+                var empresa = _mapper.Map<Empresa>(empresaCreateViewModel);
+                await _empresaServicos.Adicionar(empresa);
 
-            var empresa = _mapper.Map<Empresa>(empresaCreateViewModel);
-            await _empresaServicos.Adicionar(empresa);
-
-            return CustomResponse(HttpStatusCode.Created, _mapper.Map<EmpresaViewModel>(empresa));
+                return CustomResponse(HttpStatusCode.Created, _mapper.Map<EmpresaViewModel>(empresa));
+            } 
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+            
         }
+
+
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Atualizar(Guid id, EmpresaViewModel empresaViewModel)
         {
-            if (id != empresaViewModel.Id)
+
+            try
             {
-                NotificarErro("Os ids informados não são iguais!");
-                return CustomResponse();
+
+                var _empresaAtualizada = _mapper.Map<Empresa>(empresaViewModel);
+                _empresaAtualizada.Id = id;
+                await _empresaServicos.Atualizar(_empresaAtualizada);
+
+                return CustomResponse(HttpStatusCode.NoContent);
             }
-
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-            var _empresaAtualizada = _mapper.Map<Empresa>(empresaViewModel);
-            await _empresaServicos.Atualizar(_empresaAtualizada);
-
-            return CustomResponse(HttpStatusCode.NoContent);
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
 
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<EmpresaViewModel>> Excluir(Guid id)
         {
-            var _empresa = await ObterEmpresa(id);
 
-            if (_empresa == null) return NotFound();
+            try
+            {
 
-            await _empresaServicos.Remover(id);
+                var _empresa = await ObterEmpresa(id);
+                if (_empresa == null) return NotFound();
+                await _empresaServicos.Remover(id);
 
-            return CustomResponse(HttpStatusCode.NoContent);
+                return CustomResponse(HttpStatusCode.NoContent);
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+
+            
 
         }
 

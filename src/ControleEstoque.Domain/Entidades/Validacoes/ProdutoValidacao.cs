@@ -1,4 +1,5 @@
 ﻿using Controle_Estoque.Domain.Entidades.Produtos;
+using Controle_Estoque.Domain.Interfaces.Produtos;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,13 @@ namespace Controle_Estoque.Domain.Entidades.Validacoes
 {
     public class ProdutoValidacao : AbstractValidator<Produto>
     {
-        public ProdutoValidacao()
+
+        private readonly IProdutoRepositorio _produtoRepositorio;
+
+        public ProdutoValidacao(IProdutoRepositorio produtoRepositorio)
         {
+            _produtoRepositorio = produtoRepositorio;
+
             // Validação do Nome
             RuleFor(p => p.Nome)
                 .NotEmpty().WithMessage("O nome do produto é obrigatório.")
@@ -27,12 +33,23 @@ namespace Controle_Estoque.Domain.Entidades.Validacoes
 
             // Validação da EmpresaId
             RuleFor(p => p.EmpresaId)
-                .NotEmpty().WithMessage("A empresa é obrigatória.");
+                .NotEmpty().WithMessage("A empresa é obrigatória.")
+                .MustAsync(async (Empresa, id, cancellationToken) =>
+                {
+                     var _empresaExiste = await _produtoRepositorio.ObterPorId(id);
+                     // Permitir se não existir ou se o registro encontrado for o mesmo que está sendo atualizado
+                     return _empresaExiste == null || _empresaExiste.Id == Empresa.Id;
+                })
+                .WithMessage("Já existe uma filial com esse CNPJ informado.");
+
 
             // Validação do FilialId (se fornecido, precisa ser válido)
             RuleFor(p => p.FilialId)
                 .Must((produto, filialId) => filialId == null || produto.EmpresaId != Guid.Empty)
                 .WithMessage("Se o produto pertence a uma filial, a empresa precisa ser válida.");
+
+
+           
         }
 
     }

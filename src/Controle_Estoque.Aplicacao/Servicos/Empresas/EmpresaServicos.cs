@@ -5,6 +5,7 @@ using Controle_Estoque.Domain.Entidades.Validacoes;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Domain.Interfaces.Notificador;
+using Controle_Estoque.Entidades.Validacoes.Documento.Padronizar.Texto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,30 +28,28 @@ namespace Controle_Estoque.Aplicacao.Servicos.Empresas
         public async Task Adicionar(Empresa empresa)
         {
 
-            if (!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
+            empresa.CNPJ = empresa.CNPJ?.RetirarMascaraDocumento().VarcharToSQL();
 
-            var empresaExistente = await _empresaRepositorio.ObterPorId(empresa.Id);
-            if (empresaExistente != null)
+            var resultado = await new EmpresaValidacao(_empresaRepositorio).ValidateAsync(empresa);
+            if (!resultado.IsValid)
             {
-                Notificar("Ja existe uma empresa com ID informado!");
+                resultado.Errors.ForEach(e => Notificar(e.ErrorMessage));
                 return;
             }
-
-            var cnpjExistente = await _empresaRepositorio.ObterPorCNPJ(empresa.CNPJ);
-            if (cnpjExistente != null)
-            {
-                Notificar("Já existe uma empresa com esse CNPJ informado.");
-                return;
-            }
-
 
             await _empresaRepositorio.Adicionar(empresa);
         }
 
         public async Task Atualizar(Empresa empresa)
         {
+            empresa.CNPJ = empresa.CNPJ?.RetirarMascaraDocumento().VarcharToSQL();
 
-            if (!ExecutarValidacao(new EmpresaValidacao(), empresa)) return;
+            var resultado = await new EmpresaValidacao(_empresaRepositorio).ValidateAsync(empresa);
+            if (!resultado.IsValid)
+            {
+                resultado.Errors.ForEach(e => Notificar(e.ErrorMessage));
+                return;
+            }
 
             await _empresaRepositorio.Atualizar(empresa);
         }

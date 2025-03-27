@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 
-namespace Controle_Estoque.Infra.Padronizar.Texto
+namespace Controle_Estoque.Entidades.Validacoes.Documento.Padronizar.Texto
 {
     [DebuggerStepThrough]
     public static class TratamentoTexto

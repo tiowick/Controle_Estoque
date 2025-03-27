@@ -1,5 +1,7 @@
 ﻿using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Entidades.Filiais;
+using Controle_Estoque.Domain.Entidades.Reflection;
+using Controle_Estoque.Domain.Entidades.Validacoes.Padronizar.Texto;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -23,35 +25,82 @@ namespace Controle_Estoque.Repositorio.Repositorios.Empresas
 
         public async Task<Empresa> ObterEmpresaPorIdComFiliais(Guid id)
         {
-            return await Db.Empresas.AsNoTracking()
+            try
+            {
+                return await Db.Empresas.AsNoTracking()
                  .Include(f => f.Filiais)
-                 .FirstOrDefaultAsync(e => e.Id == id);
+                 .FirstOrDefaultAsync(e => e.Id == id).ConfigureAwait(false);            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+            
         }
 
         public async Task<IEnumerable<Empresa>> ObterEmpresas()
         {
-            return await Db.Empresas.AsNoTracking()
+
+            try
+            {
+                return await Db.Empresas.AsNoTracking()
                 .Include(e => e.Filiais)
                 .OrderBy(e => e.Descricao)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+            
         }
 
         public async Task<IEnumerable<Empresa>> ObterEmpresasComFiliais()
         {
-            return await Db.Empresas.AsNoTracking()
+            try
+            {
+                return await Db.Empresas.AsNoTracking()
                 .Include(f => f.Filiais) //propiedade de navegação
                 .OrderBy(e => e.Nome)
-                .ToListAsync();
+                .ToListAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+            
         }
 
         public async Task<IEnumerable<Empresa>> ObterFiliaisPorEmpresa(Guid filialId)
         {
-            return await Buscar(e => e.FilialId == filialId);
+            try
+            {
+                return await Buscar(e => e.FilialId == filialId);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+           
         }
 
         public async Task<Empresa> ObterPorCNPJ(string? cnpj)
         {
-            return await Db.Empresas.FirstOrDefaultAsync(f => f.CNPJ == cnpj);
+            try
+            {
+                return await Db.Empresas.FirstOrDefaultAsync(f => f.CNPJ == cnpj);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+            
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Controle_Estoque.Domain.Entidades;
+using Controle_Estoque.Domain.Entidades.Reflection;
+using Controle_Estoque.Domain.Entidades.Validacoes.Padronizar.Texto;
 using Controle_Estoque.Domain.Interfaces;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -30,33 +32,81 @@ namespace Controle_Estoque.Repositorio.Repositorios
 
         public virtual async Task<TEntity> ObterPorId(Guid id)
         {
-            return await DbSet.FindAsync(id);
+            try
+            {
+                return await DbSet.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+           
         }
 
 
         public virtual async Task<List<TEntity>> ObterTodos()
         {
-            return await DbSet.ToListAsync();
+            try
+            {
+                return await DbSet.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+           
         }
 
 
         public virtual async Task Adicionar(TEntity entity)
         {
-            DbSet.Add(entity);
-            await SaveChanges();
+            try
+            {
+
+                DbSet.Add(entity);
+                await SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+
         }
 
         public virtual async Task Atualizar(TEntity entity)
         {
-            DbSet.Update(entity);
-            await SaveChanges();
+            try
+            {
+                DbSet.Update(entity);
+                await SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }            
         }
 
 
         public virtual async Task Remover(Guid id)
         {
-            DbSet.Remove(new TEntity { Id = id }); //criando a variavel da instancia
-            await SaveChanges();
+            try
+            {
+                DbSet.Remove(new TEntity { Id = id }); //criando a variavel da instancia
+                await SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
         }
 
 

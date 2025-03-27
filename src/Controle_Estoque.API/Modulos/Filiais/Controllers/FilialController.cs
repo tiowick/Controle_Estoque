@@ -7,10 +7,16 @@ using Controle_Estoque.Aplicacao.Interfaces.Filiais;
 using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Entidades.Produtos;
+using Controle_Estoque.Domain.Entidades.Reflection;
 using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Domain.Interfaces.Notificador;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Text.Json;
+using static Controle_Estoque.Domain.Enuns.IResponseController;
+using JsonException = Newtonsoft.Json.JsonException;
 
 namespace Controle_Estoque.API.Modulos.Filiais.Controllers
 {
@@ -32,9 +38,16 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<FilialViewModel>> ObterFiliais() //retornar o resultado do repositorio
+        public async Task<ActionResult<IEnumerable<FilialViewModel>>> ObterFiliais() //retornar o resultado do repositorio
         {
-            return _mapper.Map<IEnumerable<FilialViewModel>>(await _filialRepositorio.Obterfiliais());
+            try
+            {
+                var _filial = await _filialRepositorio.ObterFiliaisComEmpresa();
+
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<FilialViewModel>>(_filial));
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
 
         }
 
@@ -42,56 +55,74 @@ namespace Controle_Estoque.API.Modulos.Filiais.Controllers
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<FilialViewModel>> ObterPorId(Guid id)
         {
-            var _filialViewModel = await ObterFilial(id);
+            try
+            {
+                var _filialViewModel = await ObterFilial(id);
+                if (_filialViewModel == null) return NotFound();
 
-            if (_filialViewModel == null) return NotFound();
-
-            return _filialViewModel;
-
+                return _filialViewModel;
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
         }
 
 
         [HttpPost]
         public async Task<ActionResult<FilialViewModel>> Adicionar(FilialCreateViewModel filialCreateViewModel)
-        
         {
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var filial = _mapper.Map<Filial>(filialCreateViewModel);
-            await _filialServicos.Adicionar(filial);
+            try
+            {
+                var filial = _mapper.Map<Filial>(filialCreateViewModel);
+                await _filialServicos.Adicionar(filial);
 
-            return CustomResponse(HttpStatusCode.Created, _mapper.Map<FilialViewModel>(filial));
+                return CustomResponse(HttpStatusCode.Created, _mapper.Map<FilialViewModel>(filial));
+
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+
+          
         }
 
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, FilialViewModel filialViewModel)
+        public async Task<IActionResult> Atualizar(Guid id, FilialUpdateViewModel filialViewModel)
         {
-            if (id != filialViewModel.Id)
+
+            try
             {
-                NotificarErro("Os ids informados não são iguais!");
-                return CustomResponse();
+
+                var _filialAtualizada = _mapper.Map<Filial>(filialViewModel);
+
+                _filialAtualizada.Id = id;
+                await _filialServicos.Atualizar(_filialAtualizada);
+
+                return CustomResponse(HttpStatusCode.NoContent);
             }
-
-            if (!ModelState.IsValid) return CustomResponse(ModelState);
-
-            var _filialAtualizada = _mapper.Map<Filial>(filialViewModel);
-            await _filialServicos.Atualizar(_filialAtualizada);
-
-            return CustomResponse(HttpStatusCode.NoContent);
-
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
         }
+
+
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FilialViewModel>> Excluir(Guid id)
         {
-            var _empresa = await ObterFilial(id);
+            try
+            {
 
-            if (_empresa == null) return NotFound();
+                var _empresa = await ObterFilial(id);
+                if (_empresa == null) return NotFound();
 
-            await _filialServicos.Remover(id);
+                await _filialServicos.Remover(id);
 
-            return CustomResponse(HttpStatusCode.NoContent);
+                return CustomResponse(HttpStatusCode.NoContent);
+
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+
 
         }
 

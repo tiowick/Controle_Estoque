@@ -15,7 +15,8 @@ namespace Controle_Estoque.API.Modulos.Filiais.ViewModels
         public string? Descricao { get; set; } // Descricao da filial
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [StringLength(15, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 11)]
+        [StringLength(14, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 11)]
         public string? CNPJ { get; set; } // CNPj da filial
+
     }
 }

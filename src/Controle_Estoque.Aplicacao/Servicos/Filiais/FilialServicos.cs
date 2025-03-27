@@ -4,6 +4,7 @@ using Controle_Estoque.Domain.Entidades.Validacoes;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Filiais;
 using Controle_Estoque.Domain.Interfaces.Notificador;
+using Controle_Estoque.Entidades.Validacoes.Documento.Padronizar.Texto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,27 +27,13 @@ namespace Controle_Estoque.Aplicacao.Servicos.Filiais
 
         public async Task Adicionar(Filial filial)
         {
-            if (!ExecutarValidacao(new FilialValidacao(), filial)) return;
 
-            var filialExistente = await _filialRepositorio.ObterPorId(filial.Id);
-            if (filialExistente != null)
-            {
-                Notificar("Já existe uma filial com esse ID informado.");
-                return;
-            }
-           
+            filial.CNPJ = filial.CNPJ?.RetirarMascaraDocumento().VarcharToSQL();
 
-            var cnpjExistente = await _filialRepositorio.ObterPorCNPJ(filial.CNPJ);
-            if (cnpjExistente != null)
+            var resultado = await new FilialValidacao(_filialRepositorio).ValidateAsync(filial);
+            if (!resultado.IsValid)
             {
-                Notificar("Já existe uma filial com esse CNPJ informado.");
-                return;
-            }
-
-            var empresaExistente = await _filialRepositorio.ObterFiliaisPorEmpresa(filial.EmpresaId);
-            if (cnpjExistente != null)
-            {
-                Notificar("A empresa informada não existe.");
+                resultado.Errors.ForEach(e => Notificar(e.ErrorMessage));
                 return;
             }
 
@@ -57,11 +44,17 @@ namespace Controle_Estoque.Aplicacao.Servicos.Filiais
         public async Task Atualizar(Filial filial)
         {
 
-            if (!ExecutarValidacao(new FilialValidacao(), filial)) return;
+            filial.CNPJ = filial.CNPJ?.RetirarMascaraDocumento().VarcharToSQL();
+
+            var resultado = await new FilialValidacao(_filialRepositorio).ValidateAsync(filial);
+            if (!resultado.IsValid)
+            {
+                resultado.Errors.ForEach(e => Notificar(e.ErrorMessage));
+                return;
+            }
 
             await _filialRepositorio.Atualizar(filial);
         }
-
 
         public async Task Remover(Guid id)
         {

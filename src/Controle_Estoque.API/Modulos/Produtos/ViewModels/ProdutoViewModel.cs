@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using Controle_Estoque.API.Modulos.Empresas.ViewModels;
+using Newtonsoft.Json;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Controle_Estoque.API.Modulos.Produtos.ViewModels
 {
@@ -29,9 +32,13 @@ namespace Controle_Estoque.API.Modulos.Produtos.ViewModels
 
         public bool Ativo { get; set; }
 
+        [JsonIgnore] // Para não serializar caso esteja usando JSON
+        [NotMapped]
+        public EmpresaViewModel? Empresa { get; set; }
 
 
 
-       
+
+
     }
 }

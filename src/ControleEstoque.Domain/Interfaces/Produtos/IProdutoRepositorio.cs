@@ -17,13 +17,13 @@ namespace Controle_Estoque.Domain.Interfaces.Produtos
         Task<IEnumerable<Produto>> ObterProdutos();
 
         // Aqui to buscando produtos especifico
-        Task<Produto> ObterProdutoPorIdComEmpresa(Guid id);
+        Task<Produto?> ObterProdutoPorIdComEmpresa(Guid? id);
 
         Task<IEnumerable<Produto>> ObterProdutosPorFilial(Guid filialId);
 
         Task<IEnumerable<Produto>> ObterProdutosComFiliais();
 
-        Task<Produto> ObterProdutoPorIdComFilial(Guid id);
+        Task<Produto?> ObterProdutoPorIdComFilial(Guid? id);
         
     }
 }

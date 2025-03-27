@@ -27,15 +27,27 @@ namespace Controle_Estoque.API.Configuracao
                .ForMember(dest => dest.Id, opt => opt.Ignore());
 
 
+            // aqui eu fiz um mapeamento pra pegar o nome da empresa
+            CreateMap<Filial, FilialViewModel>()
+               .ForMember(dest => dest.EmpresaNome, opt => opt.MapFrom(src => src.Empresa.Nome));
 
 
             CreateMap<Empresa, EmpresaViewModel>().ReverseMap(); // Mapeamento para atualização, busca etc. pode manter o Id
 
             CreateMap<Filial, FilialViewModel>().ReverseMap(); // Mapeamento para atualização, busca etc. pode manter o Id
 
+            // precisei fazer pra garantir o update, ja que na base não tem Empresa nome, não passo ela
+            // só é uma propiedade de visuazação
+            CreateMap<Filial, FilialUpdateViewModel>().ReverseMap();
+
+            CreateMap<Produto, ProdutoUpdateViewModel>().ReverseMap();
+
             CreateMap<Produto, ProdutoViewModel>().ReverseMap(); // Mapeamento para atualização, busca etc. pode manter o Id
 
             CreateMap<Movimentacao, MovimentacaoViewModel>().ReverseMap();
+
+
+           
 
 
         }

@@ -13,8 +13,8 @@ namespace Controle_Estoque.API.Modulos.Movimentacoes.ViewModels
     {
         public Guid Id { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-        public Guid EmpresaId { get; set; }
+        [DefaultValue(null)]
+        public Guid? EmpresaId { get; set; }
 
         [DefaultValue(null)] // Faz com que o Swagger exiba null por padrão
         public Guid? FilialId { get; set; }
