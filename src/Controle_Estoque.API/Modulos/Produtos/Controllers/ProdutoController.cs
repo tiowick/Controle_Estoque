@@ -60,7 +60,7 @@ namespace Controle_Estoque.API.Modulos.Produtos.Controllers
                 var _produtoViewModel = await ObterProduto(id);
                 if (_produtoViewModel == null) return NotFound();
 
-                return _produtoViewModel;
+                return CustomResponse(HttpStatusCode.OK, _produtoViewModel);
             }
             catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
             catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }

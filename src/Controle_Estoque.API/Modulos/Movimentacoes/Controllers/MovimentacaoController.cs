@@ -6,6 +6,7 @@ using Controle_Estoque.API.Modulos.Produtos.ViewModels;
 using Controle_Estoque.Aplicacao.Interfaces.Movimentacoes;
 using Controle_Estoque.Domain.Entidades.Movimentacoes;
 using Controle_Estoque.Domain.Entidades.Produtos;
+using Controle_Estoque.Domain.Entidades.Reflection;
 using Controle_Estoque.Domain.Enuns;
 using Controle_Estoque.Domain.Interfaces.Movimentacoes;
 using Controle_Estoque.Domain.Interfaces.Notificador;
@@ -35,11 +36,16 @@ namespace Controle_Estoque.API.Modulos.Movimentacoes.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<MovimentacaoViewModel>> ObterMovimentacoes() //retornar o resultado do repositorio
-        {            
-            var _movimentacao = await _movimentacaoRepositorio.ObterTodasMovimentacoes();
-            return _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacao);
-
+        public async Task<ActionResult<IEnumerable<MovimentacaoViewModel>>> ObterMovimentacoes() //retornar o resultado do repositorio
+        {          
+            
+            try
+            {
+                var _movimentacao = await _movimentacaoRepositorio.ObterTodasMovimentacoes();
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacao));
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
         }
 
 
@@ -49,46 +55,68 @@ namespace Controle_Estoque.API.Modulos.Movimentacoes.Controllers
 
             try
             {
-                //if (!ModelState.IsValid) return CustomResponse(ModelState);
 
                 var _movimentacao = _mapper.Map<Movimentacao>(movimentacaoCreateViewModel);
                 await _movimentacaoServicos.RegistrarMovimentacao(_movimentacao);
 
                 return CustomResponse(HttpStatusCode.Created, _mapper.Map<MovimentacaoViewModel>(_movimentacao));
             }
-            catch (JsonException e){ NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest);} 
-            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError);}
-
-
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
         }
 
 
         [HttpGet("produto/{id:guid}")] // pegar as movimentações por produto
-        public async Task<IEnumerable<MovimentacaoViewModel>> ObterMovimentacaoPorProduto(Guid id)
+        public async Task<ActionResult<IEnumerable<MovimentacaoViewModel>>> ObterMovimentacaoPorProduto(Guid id)
         {
-            var _movimentacao = await _movimentacaoRepositorio.ObterMovimentacoesPorProduto(id);
-            return _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacao);
+            try
+            {
+                var _movimentacaoProduto = await _movimentacaoRepositorio.ObterMovimentacoesPorProduto(id);
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacaoProduto));
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+            
         }
 
         [HttpGet("empresa/{id:guid}")] // pegar as movimentações por empresa
-        public async Task<IEnumerable<MovimentacaoViewModel>> ObterMovimentacaoPorEmpresa(Guid id)
+        public async Task<ActionResult<IEnumerable<MovimentacaoViewModel>>> ObterMovimentacaoPorEmpresa(Guid id)
         {
-            var _movimentacao = await _movimentacaoRepositorio.ObterMovimentacoesPorEmpresa(id);
-            return _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacao);
+
+            try
+            {
+                var _movimentacaoEmpresa = await _movimentacaoRepositorio.ObterMovimentacoesPorEmpresa(id);
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacaoEmpresa));
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
         }
 
         [HttpGet("filial/{id:guid}")] // pegar as movimentações por filial
-        public async Task<IEnumerable<MovimentacaoViewModel>> ObterMovimentacaoPorFilial(Guid id)
+        public async Task<ActionResult<IEnumerable<MovimentacaoViewModel>>> ObterMovimentacaoPorFilial(Guid id)
         {
-            var _movimentacao = await _movimentacaoRepositorio.ObterMovimentacoesPorFilial(id);
-            return _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacao);
+            try
+            {
+                var _movimentacaoFilial = await _movimentacaoRepositorio.ObterMovimentacoesPorFilial(id);
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacaoFilial));
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+
+            
         }
 
         [HttpGet("tipo/{tipo}")] // pegar as movimentações por tipo
-        public async Task<IEnumerable<MovimentacaoViewModel>> ObterMovimentacaoPorTipo(IMovimentacao tipo)
+        public async Task<ActionResult<IEnumerable<MovimentacaoViewModel>>> ObterMovimentacaoPorTipo(IMovimentacao tipo)
         {
-            var _movimentacao = await _movimentacaoRepositorio.ObterMovimentacoesPorTipo(tipo);
-            return _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacao);
+            try
+            {
+                var _movimentacaoTipo = await _movimentacaoRepositorio.ObterMovimentacoesPorTipo(tipo);
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<MovimentacaoViewModel>>(_movimentacaoTipo));
+            }
+            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
+            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
+            
         }
 
 
