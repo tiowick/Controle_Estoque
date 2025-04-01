@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Controle_Estoque.Domain.Enuns
 {
-    public enum IMovimentacao
+    public enum  TiposMovimentacoes
     {
         entrada = 0,
         saida = 1

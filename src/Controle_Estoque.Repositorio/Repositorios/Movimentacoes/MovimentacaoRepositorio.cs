@@ -91,18 +91,18 @@ namespace Controle_Estoque.Repositorio.Repositorios.Movimentacoes
            
         }
 
-        public async Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorTipo(IMovimentacao tipo) // entrada e saida
-        {
-            try
-            {
-                return await Buscar(m => m.TipoMovimentacao == tipo);
-            }
-            catch (Exception ex)
-            {
-                throw new TratamentoExcecao
-                    (ex.Message.Traduzir());
-            }
+        //public async Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorTipo(TiposMovimentacoes tipo) // entrada e saida
+        //{
+        //    try
+        //    {
+        //        return await Buscar(m => m.TipoMovimentacao == tipo);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new TratamentoExcecao
+        //            (ex.Message.Traduzir());
+        //    }
             
-        }
+        //}
     }
 }

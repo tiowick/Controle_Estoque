@@ -1,66 +1,61 @@
-﻿using Controle_Estoque.Aplicacao.Interfaces.Movimentacoes;
+using Controle_Estoque.Aplicacao.Interfaces.Estoques;
+using Controle_Estoque.Aplicacao.Interfaces.Movimentacoes;
 using Controle_Estoque.Domain.Entidades.Movimentacoes;
-using Controle_Estoque.Domain.Entidades.Produtos;
+using Controle_Estoque.Domain.Entidades.Reflection;
 using Controle_Estoque.Domain.Entidades.Validacoes;
 using Controle_Estoque.Domain.Enuns;
 using Controle_Estoque.Domain.Interfaces.Movimentacoes;
 using Controle_Estoque.Domain.Interfaces.Notificador;
-using Controle_Estoque.Domain.Interfaces.Produtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Controle_Estoque.Aplicacao.Servicos.Movimentacoes
 {
     public class MovimentacaoServicos : BaseServices, IMovimentacaoServicos
     {
         private readonly IMovimentacaoRepositorio _movimentacaoRepositorio;
+        private readonly IEstoqueServicos _estoqueServicos;
 
-        public MovimentacaoServicos(IMovimentacaoRepositorio movimentacaoRepositorio, 
+        public MovimentacaoServicos(IMovimentacaoRepositorio movimentacaoRepositorio,
+            IEstoqueServicos estoqueServicos,
             INotificador notificador) : base(notificador)
         {
             _movimentacaoRepositorio = movimentacaoRepositorio;
+            _estoqueServicos = estoqueServicos;
         }
-
 
         public async Task RegistrarMovimentacao(Movimentacao movimentacao)
         {
-            if (!ExecutarValidacao(new MovimentacaoValidacao(), movimentacao)) return;
-
-            var movimentacaoExistente = await _movimentacaoRepositorio.ObterPorId(movimentacao.Id);
-            if (movimentacaoExistente != null) return;     
- 
-            await _movimentacaoRepositorio.Adicionar(movimentacao);
-        }
-
-
-        public async Task<bool> ValidarMovimentacao(Movimentacao movimentacao)
-        {
-            if (movimentacao == null || movimentacao.ProdutoId == Guid.Empty || movimentacao.Quantidade <= 0)
+            try
             {
-                Notificar("Movimentação inválida.");
-                return false;
-            }
-            // Se for uma saída, verifica se há estoque suficiente
-            if (movimentacao.TipoMovimentacao == IMovimentacao.saida)
-            {
-                var produto = await _movimentacaoRepositorio.ObterMovimentacaoPorId(movimentacao.ProdutoId);
-                if (produto == null || produto.Quantidade < movimentacao.Quantidade)
+                if (!ExecutarValidacao(new MovimentacaoValidacao(), movimentacao))
+                    return;
+
+                if (movimentacao.Quantidade <= 0)
                 {
-                    Notificar("Estoque insuficiente.");
-                    return false;
+                    Notificar("A quantidade da movimentação deve ser maior que zero");
+                    return;
                 }
+
+                // Processa a movimentação no estoque
+                bool isEntrada = movimentacao.TipoMovimentacao == TiposMovimentacoes.entrada;
+                
+                try 
+                {
+                    await _estoqueServicos.ProcessarMovimentacao(movimentacao.ProdutoId, movimentacao.Quantidade, isEntrada);
+                }
+                catch (TratamentoExcecao ex) { Notificar(ex.Message);return; }
+
+                // Registra a movimentação
+                movimentacao.DataMovimentacao = DateTime.Now;
+                await _movimentacaoRepositorio.Adicionar(movimentacao);
             }
-
-
-            return true;
+            catch (TratamentoExcecao ex){ Notificar(ex.Message);}
+            catch (Exception ex) { Notificar($"Erro ao registrar movimentação: {ex.Message}"); }
         }
 
         public void Dispose()
         {
             _movimentacaoRepositorio?.Dispose();
+            _estoqueServicos?.Dispose();
         }
     }
 }

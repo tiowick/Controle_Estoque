@@ -15,6 +15,6 @@ namespace Controle_Estoque.Domain.Interfaces.Movimentacoes
         Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorEmpresa(Guid empresaId);
         Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorFilial(Guid filialId);
         Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorProduto(Guid produtoId);
-        Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorTipo(IMovimentacao tipo);
+        //Task<IEnumerable<Movimentacao>> ObterMovimentacoesPorTipo(TiposMovimentacoes tipo);
     }
 }

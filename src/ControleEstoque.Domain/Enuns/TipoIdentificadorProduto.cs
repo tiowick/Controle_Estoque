@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Controle_Estoque.Domain.Enuns
 {
-    public enum ITipoIdentificadorProduto
+    public enum TipoIdentificadorProduto
     {
         empresa = 1,
         filial = 0,

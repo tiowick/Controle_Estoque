@@ -29,11 +29,11 @@ namespace Controle_Estoque.Domain.Entidades.Estoques
         public DateTime DataAtualizacao { get; set; } = DateTime.Now;
 
         // Indica se o estoque é da empresa ou de uma filial
-        public ITipoIdentificadorProduto TipoIdentificador { get; set; }
+        public TipoIdentificadorProduto TipoIdentificador { get; set; }
 
         // Propriedades de navegação
-        public Produto Produto { get; set; } = null!;
-        public Empresa Empresa { get; set; } = null!;
+        public Produto? Produto { get; set; }
+        public Empresa? Empresa { get; set; } 
         public Filial? Filial { get; set; }
     }
 }

@@ -1,23 +1,17 @@
-﻿using Controle_Estoque.Aplicacao.Interfaces.Estoques;
-using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Aplicacao.Interfaces.Estoques;
 using Controle_Estoque.Domain.Entidades.Estoques;
 using Controle_Estoque.Domain.Entidades.Validacoes;
 using Controle_Estoque.Domain.Interfaces.Estoques;
 using Controle_Estoque.Domain.Interfaces.Notificador;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Controle_Estoque.Domain.Entidades.Reflection;
 
 namespace Controle_Estoque.Aplicacao.Servicos.Estoques
 {
     public class EstoqueServicos : BaseServices, IEstoqueServicos
     {
-
         private readonly IEstoqueRepositorio _estoqueRepositorio;
 
-        public EstoqueServicos( IEstoqueRepositorio estoqueRepositorio, 
+        public EstoqueServicos(IEstoqueRepositorio estoqueRepositorio, 
             INotificador notificador) : base(notificador)
         {
             _estoqueRepositorio = estoqueRepositorio;
@@ -25,23 +19,104 @@ namespace Controle_Estoque.Aplicacao.Servicos.Estoques
 
         public async Task Adicionar(Estoque estoque)
         {
-            if (!ExecutarValidacao(new EstoqueValidacao(), estoque)) return;
+            try
+            {
+                if (!ExecutarValidacao(new EstoqueValidacao(), estoque)) return;
 
+                var estoqueExistente = await _estoqueRepositorio.ObterEstoquePorProdutoId(estoque.ProdutoId);
+                if (estoqueExistente != null)
+                {
+                    Notificar("Já existe um estoque cadastrado para este produto");
+                    return;
+                }
 
-            await _estoqueRepositorio.Adicionar(estoque);
+                await _estoqueRepositorio.Adicionar(estoque);
+            }
+            catch (Exception ex)
+            {
+                Notificar($"Erro ao adicionar estoque: {ex.Message}");
+            }
         }
 
-        public async Task Atualizar(Estoque estoque)
+        public async Task AtualizarQuantidade(Estoque estoque)
         {
-            if (!ExecutarValidacao(new EstoqueValidacao(), estoque)) return;
+            try
+            {
+                var estoqueExistente = await _estoqueRepositorio.ObterEstoquePorProdutoId(estoque.ProdutoId);
+                if (estoqueExistente == null)
+                {
+                    Notificar("Estoque não encontrado");
+                    return;
+                }
 
+                if (estoque.Quantidade < 0)
+                {
+                    Notificar("A quantidade não pode ser negativa");
+                    return;
+                }
 
-            await _estoqueRepositorio.Adicionar(estoque); ;
+                estoqueExistente.Quantidade = estoque.Quantidade;
+                estoqueExistente.DataAtualizacao = DateTime.Now;
+
+                if (!ExecutarValidacao(new EstoqueValidacao(), estoqueExistente)) return;
+
+                await _estoqueRepositorio.Atualizar(estoqueExistente);
+            }
+            catch (Exception ex)
+            {
+                Notificar($"Erro ao atualizar quantidade em estoque: {ex.Message}");
+            }
+        }
+
+        public async Task ProcessarMovimentacao(Guid produtoId, int quantidade, bool isEntrada)
+        {
+            try
+            {
+                var estoque = await _estoqueRepositorio.ObterEstoquePorProdutoId(produtoId);
+                if (estoque == null)
+                {
+                    Notificar("Estoque não encontrado para este produto");
+                    return;
+                }
+
+                if (!isEntrada && estoque.Quantidade < quantidade)
+                {
+                    Notificar("Quantidade insuficiente em estoque");
+                    return;
+                }
+
+                estoque.Quantidade = isEntrada ?  estoque.Quantidade + quantidade : estoque.Quantidade - quantidade;
+                
+                estoque.DataAtualizacao = DateTime.Now;
+
+                if (!ExecutarValidacao(new EstoqueValidacao(), estoque)) return;
+
+                await _estoqueRepositorio.Atualizar(estoque);
+            }
+            catch (Exception ex)
+            {
+                Notificar($"Erro ao processar movimentação no estoque: {ex.Message}");
+                throw new TratamentoExcecao(ex.Message);
+            }
         }
 
         public async Task Remover(Guid id)
         {
-            await _estoqueRepositorio.Remover(id);
+            try
+            {
+                var estoque = await _estoqueRepositorio.ObterPorId(id);
+                if (estoque == null)
+                {
+                    Notificar("Estoque não encontrado");
+                    return;
+                }
+
+                await _estoqueRepositorio.Remover(id);
+            }
+            catch (Exception ex)
+            {
+                Notificar($"Erro ao remover estoque: {ex.Message}");
+            }
         }
 
         public void Dispose()

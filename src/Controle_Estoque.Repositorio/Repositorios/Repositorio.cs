@@ -122,7 +122,16 @@ namespace Controle_Estoque.Repositorio.Repositorios
 
         public void Dispose()
         {
-            Db.Dispose();
+            try
+            {
+                Db.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+            
         }
     }
 }

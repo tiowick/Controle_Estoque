@@ -29,8 +29,4 @@
     <ProjectReference Include="..\Controle_Estoque.Repositorio\Controle_Estoque.Repositorio.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Modulos\Estoques\ViewModels\" />
-  </ItemGroup>
-
 </Project>

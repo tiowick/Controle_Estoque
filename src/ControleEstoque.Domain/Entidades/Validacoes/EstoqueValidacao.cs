@@ -28,14 +28,14 @@ namespace Controle_Estoque.Domain.Entidades.Validacoes
 
             // Se o tipo de estoque for 'filial', então o FilialId deve ser informado
             RuleFor(e => e)
-                .Must(e => e.TipoIdentificador == ITipoIdentificadorProduto.empresa ||
-                  (e.TipoIdentificador == ITipoIdentificadorProduto.filial && 
+                .Must(e => e.TipoIdentificador == TipoIdentificadorProduto.empresa ||
+                  (e.TipoIdentificador == TipoIdentificadorProduto.filial && 
                    e.FilialId.HasValue && e.FilialId != Guid.Empty))
                 .WithMessage("Para estoque de filial, o FilialId é obrigatório.");
 
             // Se o tipo de estoque for 'empresa', o FilialId deve ser nulo
             RuleFor(e => e)
-                .Must(e => e.TipoIdentificador != ITipoIdentificadorProduto.empresa || e.FilialId == null)
+                .Must(e => e.TipoIdentificador != TipoIdentificadorProduto.empresa || e.FilialId == null)
                 .WithMessage("Para estoque da empresa, o FilialId deve ser nulo.");
         }
     }

@@ -1,12 +1,15 @@
 ﻿using AutoMapper;
 using Controle_Estoque.API.Modulos.Empresas.ViewModels;
+using Controle_Estoque.API.Modulos.Estoques.ViewModels;
 using Controle_Estoque.API.Modulos.Filiais.ViewModels;
 using Controle_Estoque.API.Modulos.Movimentacoes.ViewModels;
 using Controle_Estoque.API.Modulos.Produtos.ViewModels;
 using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Estoques;
 using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Entidades.Movimentacoes;
 using Controle_Estoque.Domain.Entidades.Produtos;
+using Controle_Estoque.Domain.Enuns;
 
 namespace Controle_Estoque.API.Configuracao
 {
@@ -26,6 +29,12 @@ namespace Controle_Estoque.API.Configuracao
             CreateMap<MovimentacaoCreateViewModel, Movimentacao>()
                .ForMember(dest => dest.Id, opt => opt.Ignore());
 
+            CreateMap<EstoqueCreateViewModel, Estoque>()
+             .ForMember(dest => dest.Id, opt => opt.Ignore()); // Garante que o ID será gerado no banco
+
+
+             //.ForMember(dest => dest.TipoIdentificador, opt => opt.MapFrom(src => src.TipoIdentificador)); // Certifique-se de que o Enum está mapeado corretamente
+
 
             // aqui eu fiz um mapeamento pra pegar o nome da empresa
             CreateMap<Filial, FilialViewModel>()
@@ -42,12 +51,14 @@ namespace Controle_Estoque.API.Configuracao
 
             CreateMap<Produto, ProdutoUpdateViewModel>().ReverseMap();
 
-            CreateMap<Produto, ProdutoViewModel>().ReverseMap(); // Mapeamento para atualização, busca etc. pode manter o Id
+            CreateMap<Produto, ProdutoViewModel>().ReverseMap(); 
 
             CreateMap<Movimentacao, MovimentacaoViewModel>().ReverseMap();
 
+            CreateMap<Estoque, EstoqueViewModel>().ReverseMap();
 
-           
+
+
 
 
         }

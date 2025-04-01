@@ -1,135 +1,148 @@
-﻿using AutoMapper;
+using AutoMapper;
 using Controle_Estoque.API.Controllers;
 using Controle_Estoque.API.Modulos.Empresas.ViewModels;
-using Controle_Estoque.API.Modulos.Filiais.ViewModels;
 using Controle_Estoque.Aplicacao.Interfaces.Empresas;
-using Controle_Estoque.Aplicacao.Interfaces.Produtos;
 using Controle_Estoque.Domain.Entidades.Empresas;
-using Controle_Estoque.Domain.Entidades.Filiais;
-using Controle_Estoque.Domain.Entidades.Produtos;
 using Controle_Estoque.Domain.Entidades.Reflection;
 using Controle_Estoque.Domain.Interfaces.Empresas;
 using Controle_Estoque.Domain.Interfaces.Notificador;
-using Microsoft.AspNetCore.Authorization;
+using Controle_Estoque.Entidades.Validacoes.Documento.Padronizar.Texto;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace Controle_Estoque.API.Modulos.Empresas.Controllers
 {
-    
     [ApiController]
     [Route("api/empresas")]
     public class EmpresaController : BasicController
     {
-
         private readonly IEmpresaRepositorio _empresaRepositorio;
         private readonly IEmpresaServicos _empresaServicos;
         private readonly IMapper _mapper;
 
-        public EmpresaController(IEmpresaRepositorio empresaRepositorio, IEmpresaServicos empresaServicos,
-            IMapper mapper, INotificador notificador) : base(notificador)
+        public EmpresaController(IEmpresaRepositorio empresaRepositorio, 
+            IEmpresaServicos empresaServicos,
+            IMapper mapper, 
+            INotificador notificador) : base(notificador)
         {
             _empresaRepositorio = empresaRepositorio;
             _empresaServicos = empresaServicos;
             _mapper = mapper;
-
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<EmpresaViewModel>>> ObterEmpresas() //retornar o resultado do repositorio
+        public async Task<ActionResult<IEnumerable<EmpresaViewModel>>> ObterEmpresas()
         {
-
             try
             {
-
-                var _empresas = await _empresaRepositorio.ObterEmpresasComFiliais();
-                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<EmpresaViewModel>>(_empresas)); ;
+                var empresas = await _empresaRepositorio.ObterEmpresasComFiliais();
+                return CustomResponse(HttpStatusCode.OK, _mapper.Map<IEnumerable<EmpresaViewModel>>(empresas));
             }
-            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
-            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
-
+            catch (TratamentoExcecao ex)
+            {
+                NotificarErro(ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                NotificarErro("Erro ao obter empresas: " + ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
-        
         [HttpGet("{id:guid}")]
         public async Task<ActionResult<EmpresaViewModel>> ObterPorId(Guid id)
         {
-
             try
             {
-                var _empresaViewModel = await ObterEmpresa(id);
-                if (_empresaViewModel == null) return NotFound();
+                var empresaViewModel = await ObterEmpresa(id);
+                if (empresaViewModel == null) return NotFound();
 
-                return Ok(_empresaViewModel);
+                return CustomResponse(HttpStatusCode.OK, empresaViewModel);
             }
-            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
-            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
-           
+            catch (TratamentoExcecao ex)
+            {
+                NotificarErro(ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                NotificarErro("Erro ao obter empresa: " + ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<EmpresaViewModel>> Adicionar(EmpresaCreateViewModel empresaCreateViewModel)
         {
-          
             try
             {
                 var empresa = _mapper.Map<Empresa>(empresaCreateViewModel);
                 await _empresaServicos.Adicionar(empresa);
 
                 return CustomResponse(HttpStatusCode.Created, _mapper.Map<EmpresaViewModel>(empresa));
-            } 
-            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
-            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
-            
+            }
+            catch (TratamentoExcecao ex)
+            {
+                NotificarErro(ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                NotificarErro("Erro ao adicionar empresa: " + ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.InternalServerError);
+            }
         }
-
-
 
         [HttpPut("{id:guid}")]
         public async Task<IActionResult> Atualizar(Guid id, EmpresaViewModel empresaViewModel)
         {
-
             try
             {
-
-                var _empresaAtualizada = _mapper.Map<Empresa>(empresaViewModel);
-                _empresaAtualizada.Id = id;
-                await _empresaServicos.Atualizar(_empresaAtualizada);
+                var empresaAtualizada = _mapper.Map<Empresa>(empresaViewModel);
+                empresaAtualizada.Id = id;
+                await _empresaServicos.Atualizar(empresaAtualizada);
 
                 return CustomResponse(HttpStatusCode.NoContent);
             }
-            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
-            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
-
+            catch (TratamentoExcecao ex)
+            {
+                NotificarErro(ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                NotificarErro("Erro ao atualizar empresa: " + ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.InternalServerError);
+            }
         }
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<EmpresaViewModel>> Excluir(Guid id)
         {
-
             try
             {
+                var empresa = await ObterEmpresa(id);
+                if (empresa == null) return NotFound();
 
-                var _empresa = await ObterEmpresa(id);
-                if (_empresa == null) return NotFound();
                 await _empresaServicos.Remover(id);
-
                 return CustomResponse(HttpStatusCode.NoContent);
             }
-            catch (TratamentoExcecao e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.BadRequest); }
-            catch (Exception e) { NotificarErro(e.Message); return CustomResponse(HttpStatusCode.InternalServerError); }
-
-            
-
+            catch (TratamentoExcecao ex)
+            {
+                NotificarErro(ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.BadRequest);
+            }
+            catch (Exception ex)
+            {
+                NotificarErro("Erro ao excluir empresa: " + ex.Message.RemoveAccents());
+                return CustomResponse(HttpStatusCode.InternalServerError);
+            }
         }
-
 
         private async Task<EmpresaViewModel> ObterEmpresa(Guid id)
         {
             return _mapper.Map<EmpresaViewModel>(await _empresaRepositorio.ObterPorId(id));
         }
-
-
-
     }
 }

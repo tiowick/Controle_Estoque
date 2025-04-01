@@ -33,11 +33,11 @@ namespace Controle_Estoque.Infra.Mappings.Movimentacoes
                 .HasForeignKey(m => m.FilialId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            // Enum armazenado como string no banco de dados
-            builder.Property(m => m.TipoMovimentacao)
-                .HasConversion<int>() // Armazena o enum, entrada = 1 saida = 0
-                .HasColumnType("int")
-                .IsRequired();
+            //// Enum armazenado como string no banco de dados
+            //builder.Property(m => m.TipoMovimentacao)
+            //    .HasConversion<int>() // Armazena o enum, entrada = 1 saida = 0
+            //    .HasColumnType("int")
+            //    .IsRequired();
 
             // Quantidade de produtos movimentados
             builder.Property(m => m.Quantidade)

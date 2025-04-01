@@ -10,6 +10,6 @@ namespace Controle_Estoque.Aplicacao.Interfaces.Movimentacoes
     public interface IMovimentacaoServicos : IDisposable
     {
         Task RegistrarMovimentacao(Movimentacao movimentacao);
-        Task<bool> ValidarMovimentacao(Movimentacao movimentacao);
+        //Task<bool> ValidarMovimentacao(Movimentacao movimentacao);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Controle_Estoque.Domain.Entidades.Estoques;
 using Controle_Estoque.Domain.Entidades.Filiais;
+using Controle_Estoque.Domain.Entidades.Reflection;
+using Controle_Estoque.Domain.Entidades.Validacoes.Padronizar.Texto;
 using Controle_Estoque.Domain.Interfaces.Estoques;
 using Controle_Estoque.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -21,24 +23,72 @@ namespace Controle_Estoque.Repositorio.Repositorios.Estoques
 
         public async Task<IEnumerable<Estoque>> ObterEstoque()
         {
-            return await Db.Estoques.ToListAsync();
+
+            try
+            {
+                return await Db.Estoques.AsNoTracking()
+                    .Include(p => p.Produto)
+                    .OrderBy(e => e.Quantidade)
+                    .ToListAsync().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+
+            
         }
 
         public async Task<IEnumerable<Estoque>> ObterEstoquePorEmpresaId(Guid empresaId)
         {
-            return await Buscar(e => e.EmpresaId == empresaId);
+            try
+            {
+                return await Buscar(e => e.EmpresaId == empresaId)
+                .ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+            
         }
 
         public async Task<IEnumerable<Estoque>> ObterEstoquePorFilialId(Guid filialId)
         {
-           return await Buscar(e => e.FilialId == filialId);
+            try
+            {
+                return await Buscar(e => e.FilialId == filialId)
+                    .ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+
+           
         }
 
-        public async Task<Estoque> ObterEstoquePorProdutoId(Guid produtoId)
+        public async Task<Estoque?> ObterEstoquePorProdutoId(Guid? produtoId)
         {
-            return await Db.Estoques.AsNoTracking()
-               .Include(e => e.Empresa)
-               .FirstOrDefaultAsync(e => e.Id == produtoId);
+
+            try
+            {
+                return await Db.Estoques.AsNoTracking()
+                  .Include(e => e.Produto)
+                  .FirstOrDefaultAsync(e => e.Id == produtoId)
+                  .ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                throw new TratamentoExcecao
+                    (ex.Message.Traduzir());
+            }
+           
         }
     }
 }

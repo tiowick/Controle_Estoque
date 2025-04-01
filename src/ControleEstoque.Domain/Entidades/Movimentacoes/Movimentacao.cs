@@ -1,4 +1,4 @@
-﻿using Controle_Estoque.Domain.Entidades.Empresas;
+using Controle_Estoque.Domain.Entidades.Empresas;
 using Controle_Estoque.Domain.Entidades.Filiais;
 using Controle_Estoque.Domain.Entidades.Produtos;
 using Controle_Estoque.Domain.Enuns;
@@ -21,10 +21,10 @@ namespace Controle_Estoque.Domain.Entidades.Movimentacoes
         public Guid? FilialId { get; set; } // FK opcional para Filial
         public Filial? Filial { get; set; }
 
-        public IMovimentacao TipoMovimentacao { get; set; } // Enum para garantir valores válidos
+        public TiposMovimentacoes TipoMovimentacao { get; set; } // Enum para garantir valores válidos
 
         public int Quantidade { get; set; }
 
-        public DateTime? DataMovimentacao { get; set; }
+        public DateTime DataMovimentacao { get; set; } = DateTime.Now;
     }
 }

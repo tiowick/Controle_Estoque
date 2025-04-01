@@ -22,8 +22,10 @@ namespace Controle_Estoque.API.Modulos.Movimentacoes.ViewModels
         [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         public Guid ProdutoId { get; set; } // Chave estrangeira para Produto
 
-        public IMovimentacao TipoMovimentacao { get; set; } // Enum para garantir valores válidos
+        [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+        public TiposMovimentacoes TipoMovimentacao { get; set; } // Enum para garantir valores válidos
 
+        [Required(ErrorMessage = "O campo {0} é obrigatório.")]
         public int Quantidade { get; set; }
 
         [DataType(DataType.DateTime)]
